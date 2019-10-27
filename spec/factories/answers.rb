@@ -1,6 +1,6 @@
 FactoryBot.define do
-  factory :question do
-    title { 'MyString' }
+  factory :answer do
     body { 'MyText' }
+    question { nil }
   end
 end
