@@ -1,11 +1,13 @@
 class AnswersController < ApplicationController
-  before_action :find_question, only: %i[create]
-  def new;end
+  def new; end
 
   def create
-    @question.answers.build(answer_params).save
+    if question.answers.build(answer_params).save
+      redirect_to @question
+    else
+      render :new
+    end
   end
-
 
   private
 
@@ -13,8 +15,13 @@ class AnswersController < ApplicationController
     params.require(:answer).permit(:body)
   end
 
-  def find_question
-    @question = Question.find(params[:question_id])
+  def answer
+    @answer ||= params[:id] ? Answer.find(params[:id]) : Answer.new
   end
 
+  def question
+    @question ||= Question.find(params[:question_id])
+  end
+
+  helper_method :answer, :question
 end
