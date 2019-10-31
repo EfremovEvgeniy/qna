@@ -6,8 +6,8 @@ feature 'User can see question page with answers', "
   I'd like to be able to see question page with answers
 " do
   given(:user) { create(:user) }
-  given!(:question_with_answer) { create(:question_with_answer) }
-  given!(:question) { create(:question) }
+  given(:question_with_answer) { create(:question_with_answer) }
+  given(:question) { create(:question) }
 
   describe 'Unauthenticated user' do
     scenario 'can see question page without answers' do
