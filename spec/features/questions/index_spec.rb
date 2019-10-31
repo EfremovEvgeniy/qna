@@ -24,8 +24,6 @@ feature 'User can see list of  questions', "
     end
 
     scenario 'can see list of questions' do
-      visit root_path
-
       expect(page).to have_content 'All questions'
       expect(page).to have_css('td#question_title', text: question.title)
       expect(page).to have_css('td#question_body', text: question.body)
