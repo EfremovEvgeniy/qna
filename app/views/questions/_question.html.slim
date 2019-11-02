@@ -5,3 +5,9 @@ tr
     = question.body
   td#link_to_show
     = link_to 'show', question_path(question)
+  - if current_user.present? && current_user.id == question.user_id
+    td#link_to_delete
+      = link_to 'delete', question_path(question), 
+              method: :delete,
+              data: {confirm: 'Are you sure?'}
+  
