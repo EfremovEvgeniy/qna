@@ -1,1 +1,6 @@
 li= answer.body
+- if current_user.present? && current_user.id == answer.question.user.id
+    p
+      = link_to 'delete', answer_path(answer), 
+              method: :delete,
+              data: {confirm: 'Are you sure?'}

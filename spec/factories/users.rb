@@ -13,5 +13,10 @@ FactoryBot.define do
         create(:question, user: user)
       end
     end
+    factory :user_with_question_with_answer do
+      after(:create) do |user|
+        create(:question_with_answer, user: user)
+      end
+    end
   end
 end

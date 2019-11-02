@@ -12,6 +12,11 @@ class AnswersController < ApplicationController
     end
   end
 
+  def destroy
+    answer.destroy
+    redirect_to request.referrer, notice: 'Your answer successfully deleted.'
+  end
+
   private
 
   def answer
