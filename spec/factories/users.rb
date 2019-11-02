@@ -7,5 +7,11 @@ FactoryBot.define do
     email
     password { 'password' }
     password_confirmation { 'password' }
+
+    factory :user_with_question do
+      after(:create) do |user|
+        create(:question, user: user)
+      end
+    end
   end
 end
