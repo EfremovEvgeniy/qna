@@ -6,14 +6,16 @@ feature 'User can see list of  questions', "
   I'd like to be able to see list of questions
 " do
   given(:user) { create(:user) }
-  given!(:question) { create(:question) }
+  given!(:questions) { create_list(:question, 5) }
   background { visit root_path }
 
   scenario 'Unauthenticated user can see list of questions' do
     expect(page).to have_content 'All questions'
-    expect(page).to have_css('td#question_title', text: question.title)
-    expect(page).to have_css('td#question_body', text: question.body)
-    expect(page).to have_css('td#question_title', count: Question.all.count)
+    questions.each do |question|
+      expect(page).to have_css('td#question_title', text: question.title)
+      expect(page).to have_css('td#question_body', text: question.body)
+      expect(page).to have_css('td#question_title', count: Question.all.count)
+    end
   end
 
   describe 'Authenticated user' do
@@ -23,9 +25,11 @@ feature 'User can see list of  questions', "
 
     scenario 'can see list of questions' do
       expect(page).to have_content 'All questions'
-      expect(page).to have_css('td#question_title', text: question.title)
-      expect(page).to have_css('td#question_body', text: question.body)
-      expect(page).to have_css('td#question_title', count: Question.all.count)
+      questions.each do |question|
+        expect(page).to have_css('td#question_title', text: question.title)
+        expect(page).to have_css('td#question_body', text: question.body)
+        expect(page).to have_css('td#question_title', count: Question.all.count)
+      end
     end
   end
 end
