@@ -90,17 +90,15 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'delete not own question' do
-      before do
-        @random_user = create(:user)
-        @random_question = create(:question, user: @random_user)
-      end
+      let(:random_user) { create(:user) }
+      let!(:random_question) { create(:question, user: random_user) }
 
       it 'tries to delete not user\'s own questions' do
-        expect { delete :destroy, params: { id: @random_question } }.to_not change(Question, :count)
+        expect { delete :destroy, params: { id: random_question } }.to_not change(Question, :count)
       end
 
       it 'redirects to index view' do
-        delete :destroy, params: { id: @random_question }
+        delete :destroy, params: { id: random_question }
         expect(response).to redirect_to questions_path
       end
     end

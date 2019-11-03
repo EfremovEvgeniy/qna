@@ -67,22 +67,20 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'delete not own answer' do
-      before do
-        @random_user = create(:user)
-        @random_answer = create(:answer, user: @random_user, question: question)
-      end
+      let(:random_user) { create(:user) }
+      let!(:random_answer) { create(:answer, user: random_user, question: question) }
 
       it 'tries to delete not user\'s own answers' do
         expect do
           delete :destroy, params: {
-            id: @random_answer, question_id: question
+            id: random_answer, question_id: question
           }
         end .to_not change(Answer, :count)
       end
 
-      it 'redirects to @random_answer.question show view' do
-        delete :destroy, params: { id: @random_answer, question_id: question }
-        expect(response).to redirect_to question_path(@random_answer.question)
+      it 'redirects to random_answer.question show view' do
+        delete :destroy, params: { id: random_answer, question_id: question }
+        expect(response).to redirect_to question_path(random_answer.question)
       end
     end
   end
