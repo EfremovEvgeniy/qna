@@ -1,12 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  sign_in_user
-  let(:question) { create(:question, user: @user) }
-  let(:answer) { create(:answer, question: question, user: @user) }
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
+  let(:answer) { create(:answer, question: question, user: user) }
 
   describe 'POST #create' do
     context 'with valid attributes' do
+      before :each do
+        login_with user
+      end
       it 'saves new, related to question answer in database' do
         expect do
           post :create, params: {
@@ -22,7 +25,7 @@ RSpec.describe AnswersController, type: :controller do
             question_id: question,
             answer: attributes_for(:answer)
           }
-        end .to change(@user.answers, :count).by(1)
+        end .to change(user.answers, :count).by(1)
       end
 
       it 'redirects to show question' do
@@ -31,7 +34,25 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
 
+    context 'for unauthenticated user' do
+      before :each do
+        login_with nil
+      end
+
+      it 'does not create answer' do
+        expect do
+          post :create, params: {
+            answer: attributes_for(:answer),
+            question_id: question
+          }
+        end .to_not change(question.answers, :count)
+      end
+    end
+
     context 'with invalid attributes' do
+      before :each do
+        login_with user
+      end
       it 'does not save the question answer' do
         expect do
           post :create, params: {
@@ -49,6 +70,10 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
+    before :each do
+      login_with user
+    end
+
     before { answer }
 
     context 'delete own answer' do
@@ -81,6 +106,18 @@ RSpec.describe AnswersController, type: :controller do
       it 'redirects to random_answer.question show view' do
         delete :destroy, params: { id: random_answer, question_id: question }
         expect(response).to redirect_to question_path(random_answer.question)
+      end
+    end
+
+    context ' for unauthenticated user' do
+      before :each do
+        login_with nil
+      end
+      let(:random_user) { create(:user) }
+      let!(:random_answer) { create(:answer, user: random_user, question: question) }
+
+      it 'does not delete answer' do
+        expect { delete :destroy, params: { id: random_answer } }.to_not change(Answer, :count)
       end
     end
   end
