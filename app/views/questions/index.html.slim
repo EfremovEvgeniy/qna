@@ -10,5 +10,6 @@ table
     tr
       = render @questions
 
+- if current_user.present?
+  p= link_to 'Ask question', new_question_path
 
-p= link_to 'Ask question', new_question_path
