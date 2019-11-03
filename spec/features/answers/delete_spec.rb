@@ -4,22 +4,20 @@ feature 'User can delete only his answer', "
   As an authenticated user
   I'd like to be able to delete only my answer
 " do
-  given(:user) { create(:user) }
-  given!(:question) { create(:question) }
+  given(:answer) { create(:answer) }
   given!(:question_with_answer) { create(:question_with_answer) }
 
   describe 'Authenticated user' do
     background do
-      sign_in(user)
+      sign_in(answer.user)
     end
 
     scenario 'delete his answer' do
-      visit question_path(question)
-      fill_in 'Body', with: 'my awesome answer'
-      click_on 'Save'
+      visit question_path(answer.question)
+      expect(page).to have_content answer.body
       expect(page).to have_link('delete')
       click_on 'delete'
-      expect(page).to have_no_link('delete')
+      expect(page).to have_no_content answer.body
     end
 
     scenario 'tries to delete not his own answer' do
