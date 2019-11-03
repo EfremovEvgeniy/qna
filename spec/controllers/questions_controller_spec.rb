@@ -37,9 +37,9 @@ RSpec.describe QuestionsController, type: :controller do
     context 'for authenticated user' do
       before { get :new }
 
-        it 'renders new view' do
-          expect(response).to render_template :new
-        end
+      it 'renders new view' do
+        expect(response).to render_template :new
+      end
     end
 
     context ' for unauthenticated user' do
@@ -49,7 +49,7 @@ RSpec.describe QuestionsController, type: :controller do
       before { get :new }
 
       it 'redirects to login' do
-        expect( response ).to redirect_to( new_user_session_path )
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
   end
@@ -58,7 +58,7 @@ RSpec.describe QuestionsController, type: :controller do
     before :each do
       login_with user
     end
-    
+
     let(:unauth_user) { create(:user) }
 
     context 'with valid attributes' do
