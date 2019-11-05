@@ -1,0 +1,13 @@
+tr
+  td#question_title
+    = question.title
+  td#question_body
+    = question.body
+  td#link_to_show
+    = link_to 'show', question_path(question)
+  - if current_user&.author_of?(question)
+    td#link_to_delete
+      = link_to 'delete', question_path(question), 
+              method: :delete,
+              data: {confirm: 'Are you sure?'}
+  
