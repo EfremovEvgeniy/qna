@@ -6,7 +6,6 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'GET #index' do
     let(:questions) { create_list(:question, 2) }
-
     before { get :index }
 
     it 'populates an array of all questions' do
@@ -19,10 +18,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #show' do
-    before :each do
-      login_with user
-    end
-    let(:question) { create(:question, user: user) }
+    before { login_with(user) }
     before { get :show, params: { id: question } }
 
     it 'renders show view' do
@@ -31,10 +27,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #new' do
-    before :each do
-      login_with user
-    end
     context 'for authenticated user' do
+      before { login_with(user) }
       before { get :new }
 
       it 'renders new view' do
@@ -43,9 +37,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context ' for unauthenticated user' do
-      before :each do
-        login_with nil
-      end
       before { get :new }
 
       it 'redirects to login' do
@@ -55,13 +46,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
-    before :each do
-      login_with user
-    end
-
-    let(:unauth_user) { create(:user) }
-
     context 'with valid attributes' do
+      before { login_with(user) }
       it 'saves the new question in the database' do
         expect do
           post :create, params: {
@@ -82,6 +68,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with invalid attributes' do
+      before { login_with(user) }
       it 'does not save the question' do
         expect do
           post :create, params: {
@@ -104,17 +91,22 @@ RSpec.describe QuestionsController, type: :controller do
           }
         end .to_not change(Question, :count)
       end
+
+      it 'redirects to login page' do
+        post :create, params: {
+          question: attributes_for(:question, :invalid)
+        }
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
   end
 
   describe 'DELETE #destroy' do
-    before :each do
-      login_with user
-    end
-    before { question }
+    let!(:random_question) { create(:question) }
 
     context 'delete own question' do
-      let(:question) { create(:question, user: user) }
+      before { login_with(user) }
+      let!(:question) { create(:question, user: user) }
       it "deletes user's own question" do
         expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
       end
@@ -126,8 +118,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'delete not own question' do
-      let(:random_user) { create(:user) }
-      let!(:random_question) { create(:question, user: random_user) }
+      before { login_with(user) }
 
       it 'tries to delete not user\'s own questions' do
         expect { delete :destroy, params: { id: random_question } }.to_not change(Question, :count)
@@ -140,14 +131,13 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context ' for unauthenticated user' do
-      before :each do
-        login_with nil
-      end
-      let(:random_user) { create(:user) }
-      let!(:random_question) { create(:question, user: random_user) }
-
       it 'tries to delete not user\'s own questions' do
         expect { delete :destroy, params: { id: random_question } }.to_not change(Question, :count)
+      end
+
+      it 'redirects to login page' do
+        delete :destroy, params: { id: random_question }
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
   end

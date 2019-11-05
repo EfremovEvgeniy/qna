@@ -7,9 +7,7 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #create' do
     context 'with valid attributes' do
-      before :each do
-        login_with user
-      end
+      before { login_with(user) }
       it 'saves new, related to question answer in database' do
         expect do
           post :create, params: {
@@ -35,10 +33,6 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'for unauthenticated user' do
-      before :each do
-        login_with nil
-      end
-
       it 'does not create answer' do
         expect do
           post :create, params: {
@@ -47,12 +41,19 @@ RSpec.describe AnswersController, type: :controller do
           }
         end .to_not change(question.answers, :count)
       end
+
+      it 'redirects to login page' do
+        post :create, params: {
+          answer: attributes_for(:answer),
+          question_id: question
+        }
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
 
     context 'with invalid attributes' do
-      before :each do
-        login_with user
-      end
+      before { login_with(user) }
+
       it 'does not save the question answer' do
         expect do
           post :create, params: {
@@ -70,13 +71,12 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    before :each do
-      login_with user
-    end
-
-    before { answer }
+    let!(:answer) { create(:answer, question: question, user: user) }
+    let!(:random_answer) { create(:answer, question: question) }
 
     context 'delete own answer' do
+      before { login_with(user) }
+
       it 'deletes user\'s own answer' do
         expect do
           delete :destroy, params: {
@@ -92,8 +92,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'delete not own answer' do
-      let(:random_user) { create(:user) }
-      let!(:random_answer) { create(:answer, user: random_user, question: question) }
+      before { login_with(user) }
 
       it 'tries to delete not user\'s own answers' do
         expect do
@@ -110,14 +109,13 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context ' for unauthenticated user' do
-      before :each do
-        login_with nil
-      end
-      let(:random_user) { create(:user) }
-      let!(:random_answer) { create(:answer, user: random_user, question: question) }
-
       it 'does not delete answer' do
         expect { delete :destroy, params: { id: random_answer } }.to_not change(Answer, :count)
+      end
+
+      it 'redirects to login page' do
+        delete :destroy, params: { id: random_answer }
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
   end
