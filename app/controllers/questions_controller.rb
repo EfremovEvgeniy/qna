@@ -13,8 +13,8 @@ class QuestionsController < ApplicationController
   def edit; end
 
   def create
-    question = current_user.questions.build(question_params)
-    if question.save
+    @question = current_user.questions.build(question_params)
+    if @question.save
       redirect_to questions_path, notice: 'Your question successfully created.'
     else
       render :new
