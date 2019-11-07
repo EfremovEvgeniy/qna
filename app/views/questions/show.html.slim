@@ -2,11 +2,10 @@ h1= question.title
 p= question.body
 
 .answers
-  - question.answers.each do |answer|
-    p= answer.body
+  = render question.answers
 
 - if current_user.present?
-  = render 'shared/errors', resource: @answer
+  .answer_errors
 
   = form_with(model: [question, @answer]) do |f|
     = f.label      :body

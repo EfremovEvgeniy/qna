@@ -13,7 +13,7 @@ RSpec.describe AnswersController, type: :controller do
           post :create, params: {
             answer: attributes_for(:answer),
             question_id: question
-          }
+          }, format: :js
         end .to change(question.answers, :count).by(1)
       end
 
@@ -22,13 +22,13 @@ RSpec.describe AnswersController, type: :controller do
           post :create, params: {
             question_id: question,
             answer: attributes_for(:answer)
-          }
+          }, format: :js
         end .to change(user.answers, :count).by(1)
       end
 
       it 'redirects to show question' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        expect(response).to redirect_to question_path(question)
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
+        expect(response).to render_template :create
       end
     end
 
@@ -59,13 +59,13 @@ RSpec.describe AnswersController, type: :controller do
           post :create, params: {
             answer: attributes_for(:answer, :invalid),
             question_id: question
-          }
+          }, format: :js
         end .to_not change(Answer, :count)
       end
 
       it 'renders question show template' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }
-        expect(response).to render_template 'questions/show'
+        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }, format: :js
+        expect(response).to render_template :create
       end
     end
   end
