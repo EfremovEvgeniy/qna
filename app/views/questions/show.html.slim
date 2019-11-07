@@ -12,7 +12,7 @@ p= question.body
 - if current_user.present?
   = render 'shared/errors', resource: @answer
 
-  = form_with(model: [question, @answer], local: true) do |f|
+  = form_with(model: [question, @answer]) do |f|
     = f.label      :body
     = f.text_area :body, id: :answer_body
     = f.submit 'Save'
