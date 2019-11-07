@@ -26,7 +26,7 @@ RSpec.describe AnswersController, type: :controller do
         end .to change(user.answers, :count).by(1)
       end
 
-      it 'redirects to show question' do
+      it 'renders create template' do
         post :create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js
         expect(response).to render_template :create
       end
@@ -63,7 +63,7 @@ RSpec.describe AnswersController, type: :controller do
         end .to_not change(Answer, :count)
       end
 
-      it 'renders question show template' do
+      it 'renders create template' do
         post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }, format: :js
         expect(response).to render_template :create
       end
@@ -116,6 +116,36 @@ RSpec.describe AnswersController, type: :controller do
       it 'redirects to login page' do
         delete :destroy, params: { id: random_answer }
         expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+  end
+
+  describe 'PATCH #update' do
+    context 'with valid attributes' do
+      before { login_with(user) }
+      it 'changes answer attributes' do
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        answer.reload
+        expect(answer.body).to eq 'new body'
+      end
+
+      it 'renders template update' do
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'with invalid attributes' do
+      before { login_with(user) }
+      it 'does not change answer attributes' do
+        expect do
+          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+        end.to_not change(answer, :body)
+      end
+
+      it 'renders template update' do
+        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+        expect(response).to render_template :update
       end
     end
   end

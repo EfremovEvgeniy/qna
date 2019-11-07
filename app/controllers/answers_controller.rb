@@ -15,6 +15,10 @@ class AnswersController < ApplicationController
     redirect_to @answer.question, notice: 'Your answer successfully deleted.'
   end
 
+  def update
+    answer.update(answer_params)
+  end
+
   private
 
   def answer
