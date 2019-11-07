@@ -5,9 +5,9 @@ class AnswersController < ApplicationController
   def new; end
 
   def create
-    answer = question.answers.build(answer_params)
-    answer.user = current_user
-    if answer.save
+    @answer = question.answers.build(answer_params)
+    @answer.user = current_user
+    if @answer.save
       redirect_to @question, notice: 'Your answer successfully created.'
     else
       render 'questions/show'

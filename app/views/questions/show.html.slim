@@ -1,6 +1,14 @@
 h1= question.title
 p= question.body
-ol= render question.answers
+
+.answers
+  - question.answers.each do |answer|
+    p= answer.body
+    - if current_user&.author_of?(answer)
+      p= link_to 'delete', answer_path(answer), 
+                method: :delete,
+                data: {confirm: 'Are you sure?'}
+
 - if current_user.present?
   = render 'answers/form'
 - else

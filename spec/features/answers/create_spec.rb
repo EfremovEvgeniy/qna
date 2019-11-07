@@ -20,7 +20,9 @@ feature 'User on the question page can write answer', "
       fill_in 'Body', with: 'my awesome answer'
       click_on 'Save'
       expect(page).to have_content 'Your answer successfully created.'
-      expect(page).to have_content 'my awesome answer'
+      within '.answers' do
+        expect(page).to have_content 'my awesome answer'
+      end
     end
   end
 
