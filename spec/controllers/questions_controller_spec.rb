@@ -21,6 +21,10 @@ RSpec.describe QuestionsController, type: :controller do
     before { login_with(user) }
     before { get :show, params: { id: question } }
 
+    it 'assigns new answer for question' do
+      expect(assigns(:answer)).to be_a_new(Answer)
+    end
+    
     it 'renders show view' do
       expect(response).to render_template :show
     end
