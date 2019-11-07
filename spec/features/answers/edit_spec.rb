@@ -21,7 +21,7 @@ feature 'User can edit his answer', "
       visit question_path(question)
     end
 
-    scenario 'edits his answer' do
+    scenario 'edits his answer', js: true do
       click_on 'Edit'
 
       within '.answers' do
