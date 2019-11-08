@@ -1,14 +1,5 @@
-h1= 'All questions'
-
-
-table
-  thead
-    th
-      | Title
-    th
-      | Body
-    tr
-      = render @questions
+.questions
+  = render @questions
 
 - if current_user.present?
   p= link_to 'Ask question', new_question_path
