@@ -148,5 +148,18 @@ RSpec.describe AnswersController, type: :controller do
         expect(response).to render_template :update
       end
     end
+
+    context 'for unauthenticated user' do
+      it 'does not update answer' do
+        expect do
+          patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        end.to_not change(answer, :body)
+      end
+
+      it 'redirects to login page' do
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        expect(response).to have_http_status(401)
+      end
+    end
   end
 end
