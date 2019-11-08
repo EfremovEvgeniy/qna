@@ -10,11 +10,10 @@ feature 'User can see list of  questions', "
   background { visit root_path }
 
   scenario 'Unauthenticated user can see list of questions' do
-    expect(page).to have_content 'All questions'
-    questions.each do |question|
-      expect(page).to have_css('td#question_title', text: question.title)
-      expect(page).to have_css('td#question_body', text: question.body)
-      expect(page).to have_css('td#question_title', count: Question.all.count)
+    within '.questions' do
+      questions.each do |question|
+        expect(page).to have_content question.title
+      end
     end
   end
 
@@ -24,11 +23,10 @@ feature 'User can see list of  questions', "
     end
 
     scenario 'can see list of questions' do
-      expect(page).to have_content 'All questions'
-      questions.each do |question|
-        expect(page).to have_css('td#question_title', text: question.title)
-        expect(page).to have_css('td#question_body', text: question.body)
-        expect(page).to have_css('td#question_title', count: Question.all.count)
+      within '.questions' do
+        questions.each do |question|
+          expect(page).to have_content question.title
+        end
       end
     end
   end
