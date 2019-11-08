@@ -9,14 +9,6 @@ feature 'User can see list of  questions', "
   given!(:questions) { create_list(:question, 5) }
   background { visit root_path }
 
-  scenario 'Unauthenticated user can see list of questions' do
-    within '.questions' do
-      questions.each do |question|
-        expect(page).to have_content question.title
-      end
-    end
-  end
-
   describe 'Authenticated user' do
     background do
       sign_in(user)
@@ -27,6 +19,14 @@ feature 'User can see list of  questions', "
         questions.each do |question|
           expect(page).to have_content question.title
         end
+      end
+    end
+  end
+
+  scenario 'Unauthenticated user can see list of questions' do
+    within '.questions' do
+      questions.each do |question|
+        expect(page).to have_content question.title
       end
     end
   end

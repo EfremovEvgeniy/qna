@@ -5,15 +5,8 @@ feature 'User can edit his question', "
   As an author of question
   I'd like to be able to edit my question
   " do
-  given(:user) { create(:user) }
   given(:second_user) { create(:user) }
-  given!(:question) { create(:question, user: user) }
-
-  scenario 'Unauthenticated user can not edit question' do
-    visit root_path
-
-    expect(page).to have_no_link 'edit'
-  end
+  given!(:question) { create(:question) }
 
   describe 'Authenticated user', js: true do
     background do
@@ -51,5 +44,11 @@ feature 'User can edit his question', "
     scenario 'tries to edit not his own question', js: true do
       expect(page).to have_no_link('edit')
     end
+  end
+
+  scenario 'Unauthenticated user can not edit question' do
+    visit root_path
+
+    expect(page).to have_no_link 'edit'
   end
 end

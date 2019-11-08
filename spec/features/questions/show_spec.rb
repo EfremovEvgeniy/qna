@@ -9,21 +9,6 @@ feature 'User can see question page with answers', "
   given(:question_with_answer) { create(:question_with_answer) }
   given(:question) { create(:question) }
 
-  describe 'Unauthenticated user' do
-    scenario 'can see question page without answers' do
-      visit question_path(question)
-      expect(page).to have_content question.title
-      expect(page).to have_content question.body
-    end
-
-    scenario 'can see question page with answers' do
-      visit question_path(question_with_answer)
-      expect(page).to have_content question_with_answer.title
-      expect(page).to have_content question_with_answer.body
-      expect(page).to have_content question_with_answer.answers.first.body
-    end
-  end
-
   describe 'Authenticated user' do
     background do
       sign_in(user)
@@ -31,15 +16,42 @@ feature 'User can see question page with answers', "
 
     scenario 'can see question page without answers' do
       visit question_path(question)
+      
       expect(page).to have_content question.title
       expect(page).to have_content question.body
     end
 
     scenario 'can see question page with answers' do
       visit question_path(question_with_answer)
+
       expect(page).to have_content question_with_answer.title
       expect(page).to have_content question_with_answer.body
-      expect(page).to have_content question_with_answer.answers.first.body
+      within '.answers' do
+        question_with_answer.answers.each do |answer|
+          expect(page).to have_content answer.body
+        end
+      end
+    end
+  end
+
+  describe 'Unauthenticated user' do
+    scenario 'can see question page without answers' do
+      visit question_path(question)
+
+      expect(page).to have_content question.title
+      expect(page).to have_content question.body
+    end
+
+    scenario 'can see question page with answers' do
+      visit question_path(question_with_answer)
+
+      expect(page).to have_content question_with_answer.title
+      expect(page).to have_content question_with_answer.body
+      within '.answers' do
+        question_with_answer.answers.each do |answer|
+          expect(page).to have_content answer.body
+        end
+      end
     end
   end
 end

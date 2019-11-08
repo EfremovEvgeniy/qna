@@ -12,17 +12,20 @@ feature 'User can delete only his question', "
       visit root_path
     end
 
-    scenario 'delete his question' do
+    scenario 'can delete his question' do
       expect(page).to have_content question.title
       expect(page).to have_link('delete')
+
       click_on 'delete'
+
       expect(page).to have_no_content question.title
       expect(page).to have_no_link('delete')
     end
   end
 
-  scenario 'unauthenticated user tries to delete question' do
+  scenario 'Unauthenticated user tries to delete question' do
     visit root_path
+
     expect(page).to have_no_link('delete')
   end
 end

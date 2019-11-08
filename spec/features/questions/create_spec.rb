@@ -18,6 +18,7 @@ feature 'User can create question', "
       fill_in 'Title', with: 'Test question'
       fill_in 'Body', with: 'text text text'
       click_on 'Ask'
+
       expect(page).to have_content 'Your question successfully created.'
       expect(page).to have_content 'text text text'
     end
@@ -30,6 +31,7 @@ feature 'User can create question', "
 
   scenario 'Unauthenticated user tries to ask a question' do
     visit questions_path
+    
     expect(page).to have_no_link 'Ask question'
   end
 end

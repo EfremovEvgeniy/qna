@@ -112,7 +112,10 @@ RSpec.describe QuestionsController, type: :controller do
       before { login_with(user) }
       let!(:question) { create(:question, user: user) }
       it "deletes user's own question" do
-        expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
+        expect do
+          delete :destroy, params:
+        { id: question }
+        end .to change(Question, :count).by(-1)
       end
 
       it 'redirects to index view' do
@@ -125,7 +128,10 @@ RSpec.describe QuestionsController, type: :controller do
       before { login_with(user) }
 
       it 'tries to delete not user\'s own questions' do
-        expect { delete :destroy, params: { id: random_question } }.to_not change(Question, :count)
+        expect do
+          delete :destroy, params:
+        { id: random_question }
+        end .to_not change(Question, :count)
       end
 
       it 'redirects to index view' do
@@ -136,7 +142,10 @@ RSpec.describe QuestionsController, type: :controller do
 
     context ' for unauthenticated user' do
       it 'tries to delete not user\'s own questions' do
-        expect { delete :destroy, params: { id: random_question } }.to_not change(Question, :count)
+        expect do
+          delete :destroy, params:
+        { id: random_question }
+        end .to_not change(Question, :count)
       end
 
       it 'redirects to login page' do
@@ -150,14 +159,16 @@ RSpec.describe QuestionsController, type: :controller do
     context 'with valid attributes' do
       before { login_with(user) }
       it 'changes question attributes' do
-        patch :update, params: { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
+        patch :update, params:
+        { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
         question.reload
         expect(question.body).to eq 'new body'
         expect(question.title).to eq 'new title'
       end
 
       it 'renders template update' do
-        patch :update, params: { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
+        patch :update, params:
+        { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
         expect(response).to render_template :update
       end
     end
@@ -166,12 +177,14 @@ RSpec.describe QuestionsController, type: :controller do
       before { login_with(user) }
       it 'does not change question attributes' do
         expect do
-          patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
+          patch :update, params:
+          { id: question, question: attributes_for(:question, :invalid) }, format: :js
         end.to_not change(question, :title)
       end
 
       it 'renders template update' do
-        patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
+        patch :update, params:
+        { id: question, question: attributes_for(:question, :invalid) }, format: :js
         expect(response).to render_template :update
       end
     end
@@ -179,12 +192,14 @@ RSpec.describe QuestionsController, type: :controller do
     context 'for unauthenticated user' do
       it 'does not update question' do
         expect do
-          patch :update, params: { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
+          patch :update, params:
+          { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
         end.to_not change(question, :title)
       end
 
       it 'returns 401 status' do
-        patch :update, params: { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
+        patch :update, params:
+        { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
         expect(response).to have_http_status(401)
       end
     end
