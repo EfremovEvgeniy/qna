@@ -81,13 +81,13 @@ RSpec.describe AnswersController, type: :controller do
         expect do
           delete :destroy, params: {
             id: answer.id, question_id: question.id
-          }
+          }, format: :js
         end .to change(Answer, :count).by(-1)
       end
 
-      it 'redirects to @answer.question show view' do
-        delete :destroy, params: { id: answer, question_id: question }
-        expect(response).to redirect_to question_path(answer.question)
+      it 'renders template destroy' do
+        delete :destroy, params: { id: answer, question_id: question }, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
@@ -98,24 +98,24 @@ RSpec.describe AnswersController, type: :controller do
         expect do
           delete :destroy, params: {
             id: random_answer, question_id: question
-          }
+          }, format: :js
         end .to_not change(Answer, :count)
       end
 
-      it 'redirects to random_answer.question show view' do
-        delete :destroy, params: { id: random_answer, question_id: question }
-        expect(response).to redirect_to question_path(random_answer.question)
+      it 'renders template destroy' do
+        delete :destroy, params: { id: random_answer, question_id: question }, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
     context ' for unauthenticated user' do
       it 'does not delete answer' do
-        expect { delete :destroy, params: { id: random_answer } }.to_not change(Answer, :count)
+        expect { delete :destroy, params: { id: random_answer }, format: :js }.to_not change(Answer, :count)
       end
 
-      it 'redirects to login page' do
-        delete :destroy, params: { id: random_answer }
-        expect(response).to redirect_to(new_user_session_path)
+      it 'returns 401 status' do
+        delete :destroy, params: { id: random_answer }, format: :js
+        expect(response).to have_http_status(401)
       end
     end
   end

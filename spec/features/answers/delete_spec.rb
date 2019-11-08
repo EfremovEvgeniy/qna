@@ -7,7 +7,7 @@ feature 'User can delete only his answer', "
   given(:answer) { create(:answer) }
   given!(:question_with_answer) { create(:question_with_answer) }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     background do
       sign_in(answer.user)
     end
