@@ -15,20 +15,20 @@ feature 'User can delete only his answer', "
     scenario 'delete his answer' do
       visit question_path(answer.question)
       expect(page).to have_content answer.body
-      expect(page).to have_link('delete')
-      click_on 'delete'
+      expect(page).to have_link('Delete')
+      click_on 'Delete'
       expect(page).to have_no_content answer.body
     end
 
     scenario 'tries to delete not his own answer' do
       visit question_path(question_with_answer)
-      expect(page).to have_no_link('delete')
+      expect(page).to have_no_link('Delete')
     end
   end
 
   scenario 'Unauthenticated user tries to delete answer' do
     visit question_path(question_with_answer)
     expect(page).to have_content 'You need to sign in to write your answer'
-    expect(page).to have_no_link('delete')
+    expect(page).to have_no_link('Delete')
   end
 end
