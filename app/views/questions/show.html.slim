@@ -10,7 +10,7 @@ p= question.body
   = form_with model: [question, @answer], class: 'new-answer' do |f|
     = f.label      :body
     = f.text_area :body, id: :answer_body
-    = f.submit 'Save'
+    = f.submit 'Create'
 - else
   p= "You need to sign in to write your answer"
 

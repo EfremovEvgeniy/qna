@@ -2,11 +2,10 @@ p= answer.body
 
 - if current_user&.author_of?(answer)
       p= link_to 'delete', answer_path(answer), method: :delete, data: {confirm: 'Are you sure?'}
-- if user_signed_in?
       p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
 
 
 = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}"} do |f|
-  = f.label      :body
+  = f.label      :body, 'Edit body'
   = f.text_area :body, id: :answer_body
   = f.submit 'Save'

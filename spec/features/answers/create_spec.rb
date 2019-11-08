@@ -19,7 +19,7 @@ feature 'User on the question page can write answer', "
       expect(page).to have_no_content('You need to sign in to write your answer')
 
       fill_in 'Body', with: 'my awesome answer'
-      click_on 'Save'
+      click_on 'Create'
 
       within '.answers' do
         expect(page).to have_content 'my awesome answer'
@@ -27,7 +27,7 @@ feature 'User on the question page can write answer', "
     end
 
     scenario 'creates answer with errors' do
-      click_on 'Save'
+      click_on 'Create'
 
       expect(page).to have_content "Body can't be blank"
     end
