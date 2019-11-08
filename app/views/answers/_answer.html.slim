@@ -1,6 +1,8 @@
-p= answer.body
-
-- if current_user&.author_of?(answer)
+- if answer.persisted?
+    p
+      div id = "answer_#{answer.id}"  
+        = answer.body
+        - if current_user&.author_of?(answer)
             |    
             = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
             |    
