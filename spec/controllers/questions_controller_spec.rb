@@ -145,4 +145,48 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #update' do
+    context 'with valid attributes' do
+      before { login_with(user) }
+      it 'changes question attributes' do
+        patch :update, params: { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
+        question.reload
+        expect(question.body).to eq 'new body'
+        expect(question.title).to eq 'new title'
+      end
+
+      it 'renders template update' do
+        patch :update, params: { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'with invalid attributes' do
+      before { login_with(user) }
+      it 'does not change question attributes' do
+        expect do
+          patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
+        end.to_not change(question, :title)
+      end
+
+      it 'renders template update' do
+        patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'for unauthenticated user' do
+      it 'does not update question' do
+        expect do
+          patch :update, params: { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
+        end.to_not change(question, :title)
+      end
+
+      it 'returns 401 status' do
+        patch :update, params: { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
+        expect(response).to have_http_status(401)
+      end
+    end
+  end
 end

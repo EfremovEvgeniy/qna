@@ -156,7 +156,7 @@ RSpec.describe AnswersController, type: :controller do
         end.to_not change(answer, :body)
       end
 
-      it 'redirects to login page' do
+      it 'returns 401 status' do
         patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
         expect(response).to have_http_status(401)
       end
