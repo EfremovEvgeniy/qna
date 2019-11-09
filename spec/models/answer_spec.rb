@@ -6,11 +6,12 @@ RSpec.describe Answer, type: :model do
 
   it { should validate_presence_of :body }
 
-  describe 'Attribute best in answer object' do
-    let(:answer) { build(:answer) }
+  describe 'Scope:' do
+    let(:best_answer) { create(:answer, :best) }
+    let(:answers) { create_list(:answer, 3, question: best_answer.question) }
 
-    it 'false by default' do
-      expect(answer.best).to be false
+    it 'by default return first best answer in collection' do
+      expect(best_answer.question.answers.first).to eq best_answer
     end
   end
 
@@ -20,9 +21,9 @@ RSpec.describe Answer, type: :model do
     let(:answer) { create(:answer, question: question, user: user) }
 
     describe 'Make answer best' do
-      context '#make_best' do
+      context '#make_best!' do
         it 'update attribute best to true' do
-          expect { answer.make_best }.to change(answer, :best).from(false).to(true)
+          expect { answer.make_best! }.to change(answer, :best).from(false).to(true)
         end
       end
 
@@ -30,8 +31,8 @@ RSpec.describe Answer, type: :model do
         let(:second_answer) { create(:answer, question: question, user: user) }
 
         it 'update attribute best to false' do
-          answer.make_best
-          second_answer.make_best
+          answer.make_best!
+          second_answer.make_best!
           answer.reload
           second_answer.reload
 

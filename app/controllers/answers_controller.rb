@@ -15,15 +15,13 @@ class AnswersController < ApplicationController
   end
 
   def update
-    answer.update(answer_params)
+    answer.update(answer_params) if current_user.author_of?(answer)
     @question = @answer.question
   end
 
   def make_best
     if current_user.author_of?(answer.question)
-      @answer.make_best
-    else
-      render plain: 'Permission denied'
+      @answer.make_best!
     end
   end
 

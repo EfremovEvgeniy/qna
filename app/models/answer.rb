@@ -4,10 +4,12 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
-  scope :sort_by_best, -> { order(best: :desc) }
+  default_scope { order(best: :desc) }
 
-  def make_best
-    question.answers.where(best: true).update_all(best: false)
-    update!(best: true)
+  def make_best!
+    transaction do
+      question.answers.update_all(best: false)
+      update!(best: true)
+    end
   end
 end

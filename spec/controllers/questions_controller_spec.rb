@@ -179,7 +179,8 @@ RSpec.describe QuestionsController, type: :controller do
         expect do
           patch :update, params:
           { id: question, question: attributes_for(:question, :invalid) }, format: :js
-        end.to_not change(question, :title)
+          question.reload
+        end.to_not change(question.reload, :title)
       end
 
       it 'renders template update' do
@@ -189,12 +190,30 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
+    context 'for not author' do
+      let(:second_user) { create(:user) }
+      before { login_with(second_user) }
+
+      it 'tries to update question' do
+        expect do
+          patch :update, params:
+          { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
+        end.to_not change(question.reload, :title)
+      end
+
+      it 'renders template update' do
+        patch :update, params:
+        { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
+        expect(response).to render_template :update
+      end
+    end
+
     context 'for unauthenticated user' do
       it 'does not update question' do
         expect do
           patch :update, params:
           { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
-        end.to_not change(question, :title)
+        end.to_not change(question.reload, :title)
       end
 
       it 'returns 401 status' do

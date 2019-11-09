@@ -1,23 +1,22 @@
-- if question.persisted?
-    p
-      div id = "question_#{question.id}"  
-        p= question.title
-        = question.body
-        = link_to 'show',  question_path(question)
-        - if current_user&.author_of?(question)
-            |    
-            = link_to 'edit', '#', class: 'edit-question-link', data: { question_id: question.id }
-            |  
-            = link_to 'delete', question_path(question), method: :delete
+p
+  div id = "question_#{question.id}"  
+    p= question.title
+    = question.body
+    = link_to 'show',  question_path(question)
+    - if current_user&.author_of?(question)
+        |    
+        = link_to 'edit', '#', class: 'edit-question-link', data: { question_id: question.id }
+        |  
+        = link_to 'delete', question_path(question), method: :delete
 
-        div id = "question-errors_#{question.id}"
-          = render 'shared/errors', resource: question    
+    div id = "question-errors_#{question.id}"
+      = render 'shared/errors', resource: question    
 
-        = form_with model: question, class: 'hidden', html: { id: "edit-question-#{question.id}" } do |f|
-          = f.label :title, 'Edit title'
-          = f.text_field :title
-          = f.label :body, 'Edit body'
-          = f.text_area :body
-          = f.submit 'Save'
+    = form_with model: question, class: 'hidden', html: { id: "edit-question-#{question.id}" } do |f|
+      = f.label :title, 'Edit title'
+      = f.text_field :title
+      = f.label :body, 'Edit body'
+      = f.text_area :body
+      = f.submit 'Save'
 
   

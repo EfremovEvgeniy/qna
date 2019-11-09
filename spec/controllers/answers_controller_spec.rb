@@ -149,7 +149,7 @@ RSpec.describe AnswersController, type: :controller do
         expect do
           patch :update, params:
            { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
-        end.to_not change(answer, :body)
+        end.to_not change(answer.reload, :body)
       end
 
       it 'renders template update' do
@@ -163,12 +163,28 @@ RSpec.describe AnswersController, type: :controller do
       it 'does not update answer' do
         expect do
           patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
-        end.to_not change(answer, :body)
+        end.to_not change(answer.reload, :body)
       end
 
       it 'returns 401 status' do
         patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
         expect(response).to have_http_status(401)
+      end
+    end
+
+    context 'not author answer' do
+      let(:second_user) { create(:user) }
+      before { login_with(second_user) }
+
+      it 'tries to update not his own answer' do
+        expect do
+          patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        end .to_not change(answer.reload, :body)
+      end
+
+      it 'renders template update' do
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        expect(response).to render_template :update
       end
     end
   end
@@ -181,7 +197,7 @@ RSpec.describe AnswersController, type: :controller do
         patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
         answer.reload
 
-        expect(answer.best).to eq true
+        expect(answer).to be_best
       end
 
       it 'renders make_best view' do
@@ -200,7 +216,7 @@ RSpec.describe AnswersController, type: :controller do
         patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
         answer.reload
 
-        expect(answer.best).to eq false
+        expect(answer).to_not be_best
       end
     end
 
@@ -209,7 +225,7 @@ RSpec.describe AnswersController, type: :controller do
         patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
         answer.reload
 
-        expect(answer.best).to eq false
+        expect(answer).to_not be_best
       end
 
       it 'returns 401 status' do
