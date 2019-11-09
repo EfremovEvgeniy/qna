@@ -23,7 +23,7 @@ feature 'User can log out', "
 
   scenario 'Unauthenticated user can not log out' do
     visit root_path
-    
+
     expect(page).to have_no_link('Log out')
   end
 end

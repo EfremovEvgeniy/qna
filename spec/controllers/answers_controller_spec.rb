@@ -172,4 +172,57 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #make_best' do
+    context 'only the by author question' do
+      before { login_with(user) }
+
+      it 'update answer attribute best' do
+        patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
+        answer.reload
+
+        expect(answer.best).to eq true
+      end
+
+      it 'renders make_best view' do
+        patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
+
+        expect(response).to render_template :make_best
+      end
+    end
+
+    context 'not author question' do
+      let(:second_user) { create(:user) }
+
+      before { login_with(second_user) }
+
+      it 'does not update answer attribute best' do
+        patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
+        answer.reload
+
+        expect(answer.best).to eq false
+      end
+
+      # it 'renders make_best view' do
+      #   patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
+
+      #   expect(response.content_type).to eq('text/javascript')
+      #   expect(response.body).to eq("alert('Permission denied');")
+      # end
+    end
+
+    context 'for unauthenticated user' do
+      it 'does not update answer attribute best' do
+        patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
+        answer.reload
+
+        expect(answer.best).to eq false
+      end
+
+      it 'returns 401 status' do
+        patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
+        expect(response).to have_http_status(401)
+      end
+    end
+  end
 end

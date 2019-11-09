@@ -12,12 +12,19 @@ class AnswersController < ApplicationController
 
   def destroy
     @answer.destroy if current_user.author_of?(answer)
-    # redirect_to @answer.question, notice: 'Your answer successfully deleted.'
   end
 
   def update
     answer.update(answer_params)
     @question = @answer.question
+  end
+
+  def make_best
+    if current_user.author_of?(answer.question)
+      @answer.make_best
+    else
+      render plain: 'Permission denied'
+    end
   end
 
   private

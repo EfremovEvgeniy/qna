@@ -16,7 +16,7 @@ feature 'User can see question page with answers', "
 
     scenario 'can see question page without answers' do
       visit question_path(question)
-      
+
       expect(page).to have_content question.title
       expect(page).to have_content question.body
     end
