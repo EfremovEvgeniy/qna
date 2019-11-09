@@ -35,5 +35,37 @@ feature 'User can make a best one of the answers of his question', "
         expect(page).to have_content 'You marked this answer like best!'
       end
     end
+
+    scenario 'best answer must be first in the list' do
+      expect(page).to have_no_content 'You marked this answer like best!'
+
+      within "#answer_#{answers.first.id}" do
+        click_on 'Best answer'
+      end
+
+      expect(page.find('.answers div:first-of-type ')).to have_content 'You marked this answer like best!'
+    end
+
+    scenario 'best answer may be only one' do
+      within "#answer_#{answers.first.id}" do
+        click_on 'Best answer'
+
+        expect(page).to have_content 'You marked this answer like best!'
+      end
+
+      within "#answer_#{answers.second.id}" do
+        click_on 'Best answer'
+
+        expect(page).to have_content 'You marked this answer like best!'
+      end
+
+      within "#answer_#{answers.first.id}" do
+        expect(page).to have_no_content 'You marked this answer like best!'
+      end
+
+      within "#answer_#{answers.third.id}" do
+        expect(page).to have_no_content 'You marked this answer like best!'
+      end
+    end
   end
 end

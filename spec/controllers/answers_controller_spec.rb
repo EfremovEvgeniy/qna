@@ -202,13 +202,6 @@ RSpec.describe AnswersController, type: :controller do
 
         expect(answer.best).to eq false
       end
-
-      # it 'renders make_best view' do
-      #   patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
-
-      #   expect(response.content_type).to eq('text/javascript')
-      #   expect(response.body).to eq("alert('Permission denied');")
-      # end
     end
 
     context 'for unauthenticated user' do
