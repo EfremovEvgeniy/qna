@@ -7,11 +7,12 @@ RSpec.describe Answer, type: :model do
   it { should validate_presence_of :body }
 
   describe 'Scope:' do
-    let(:best_answer) { create(:answer, :best) }
+    let!(:best_answer) { create(:answer, :best) }
     let(:answers) { create_list(:answer, 3, question: best_answer.question) }
 
     it 'by default return first best answer in collection' do
       expect(best_answer.question.answers.first).to eq best_answer
+      expect(best_answer.question.answers).to eq [best_answer, answers.first, answers.second, answers.third]
     end
   end
 
@@ -36,8 +37,8 @@ RSpec.describe Answer, type: :model do
           answer.reload
           second_answer.reload
 
-          expect(answer.best).to eq false
-          expect(second_answer.best).to eq true
+          expect(answer).to_not be_best
+          expect(second_answer).to be_best
         end
       end
     end

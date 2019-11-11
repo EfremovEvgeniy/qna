@@ -218,6 +218,13 @@ RSpec.describe AnswersController, type: :controller do
 
         expect(answer).to_not be_best
       end
+
+      it 'renders make best temolate' do
+        patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
+        answer.reload
+
+        expect(response).to render_template :make_best
+      end
     end
 
     context 'for unauthenticated user' do
