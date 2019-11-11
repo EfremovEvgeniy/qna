@@ -1,22 +1,26 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, only: %i[create destroy]
+  before_action :authenticate_user!, only: %i[create destroy update make_best]
   helper_method :answer, :question
 
   def new; end
 
   def create
-    answer = question.answers.build(answer_params)
-    answer.user = current_user
-    if answer.save
-      redirect_to @question, notice: 'Your answer successfully created.'
-    else
-      render 'questions/show'
-    end
+    @answer = question.answers.build(answer_params)
+    @answer.user = current_user
+    @answer.save
   end
 
   def destroy
     @answer.destroy if current_user.author_of?(answer)
-    redirect_to @answer.question, notice: 'Your answer successfully deleted.'
+  end
+
+  def update
+    answer.update(answer_params) if current_user.author_of?(answer)
+    @question = @answer.question
+  end
+
+  def make_best
+    @answer.make_best! if current_user.author_of?(answer.question)
   end
 
   private

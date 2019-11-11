@@ -9,26 +9,24 @@ feature 'User can see list of  questions', "
   given!(:questions) { create_list(:question, 5) }
   background { visit root_path }
 
-  scenario 'Unauthenticated user can see list of questions' do
-    expect(page).to have_content 'All questions'
-    questions.each do |question|
-      expect(page).to have_css('td#question_title', text: question.title)
-      expect(page).to have_css('td#question_body', text: question.body)
-      expect(page).to have_css('td#question_title', count: Question.all.count)
-    end
-  end
-
   describe 'Authenticated user' do
     background do
       sign_in(user)
     end
 
     scenario 'can see list of questions' do
-      expect(page).to have_content 'All questions'
+      within '.questions' do
+        questions.each do |question|
+          expect(page).to have_content question.title
+        end
+      end
+    end
+  end
+
+  scenario 'Unauthenticated user can see list of questions' do
+    within '.questions' do
       questions.each do |question|
-        expect(page).to have_css('td#question_title', text: question.title)
-        expect(page).to have_css('td#question_body', text: question.body)
-        expect(page).to have_css('td#question_title', count: Question.all.count)
+        expect(page).to have_content question.title
       end
     end
   end

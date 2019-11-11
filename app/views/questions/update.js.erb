@@ -1,0 +1,5 @@
+$('#question-errors_<%= @question.id %>').html('<%= render 'shared/errors', resource: @question %>')
+
+<% if @question.errors.blank? %>
+  $('#question_<%= @question.id %>').html('<%= j render @question %>');
+<% end %>

@@ -1,5 +1,0 @@
-= form_with(model: [question, question.answers.build], local: true) do |f|
-  .form-group
-    = f.label      :body
-    = f.text_area :body, id: :answer_body
-  = f.submit 'Save'

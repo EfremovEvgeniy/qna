@@ -1,9 +1,16 @@
 h1= question.title
 p= question.body
-ol= render question.answers
+
+.answers
+  = render question.answers
+
 - if current_user.present?
-  = render 'answers/form'
+  .answer_errors
+
+  = form_with model: [question, @answer], class: 'new-answer' do |f|
+    = f.label      :body
+    = f.text_area :body, id: :answer_body
+    = f.submit 'Create'
 - else
-  p
-    = "You need to sign in to write your answer"
+  p= "You need to sign in to write your answer"
 

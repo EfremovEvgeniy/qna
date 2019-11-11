@@ -1,0 +1,5 @@
+<% if @answer.errors.present? %>
+    $('#answer_<%= @answer.id %>').html('<%= render 'shared/errors', resource: @answer %>')
+<% else %>
+    $('#answer_<%= @answer.id %>').html('<%= j render @answer %>');
+<% end %>

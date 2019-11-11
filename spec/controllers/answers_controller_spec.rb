@@ -13,7 +13,7 @@ RSpec.describe AnswersController, type: :controller do
           post :create, params: {
             answer: attributes_for(:answer),
             question_id: question
-          }
+          }, format: :js
         end .to change(question.answers, :count).by(1)
       end
 
@@ -22,13 +22,14 @@ RSpec.describe AnswersController, type: :controller do
           post :create, params: {
             question_id: question,
             answer: attributes_for(:answer)
-          }
+          }, format: :js
         end .to change(user.answers, :count).by(1)
       end
 
-      it 'redirects to show question' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        expect(response).to redirect_to question_path(question)
+      it 'renders create template' do
+        post :create, params:
+        { question_id: question, answer: attributes_for(:answer) }, format: :js
+        expect(response).to render_template :create
       end
     end
 
@@ -59,13 +60,16 @@ RSpec.describe AnswersController, type: :controller do
           post :create, params: {
             answer: attributes_for(:answer, :invalid),
             question_id: question
-          }
+          }, format: :js
         end .to_not change(Answer, :count)
       end
 
-      it 'renders question show template' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }
-        expect(response).to render_template 'questions/show'
+      it 'renders create template' do
+        post :create, params: {
+          question_id: question,
+          answer: attributes_for(:answer, :invalid)
+        }, format: :js
+        expect(response).to render_template :create
       end
     end
   end
@@ -77,17 +81,17 @@ RSpec.describe AnswersController, type: :controller do
     context 'delete own answer' do
       before { login_with(user) }
 
-      it 'deletes user\'s own answer' do
+      it 'deletes users own answer' do
         expect do
           delete :destroy, params: {
             id: answer.id, question_id: question.id
-          }
+          }, format: :js
         end .to change(Answer, :count).by(-1)
       end
 
-      it 'redirects to @answer.question show view' do
-        delete :destroy, params: { id: answer, question_id: question }
-        expect(response).to redirect_to question_path(answer.question)
+      it 'renders template destroy' do
+        delete :destroy, params: { id: answer, question_id: question }, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
@@ -98,24 +102,142 @@ RSpec.describe AnswersController, type: :controller do
         expect do
           delete :destroy, params: {
             id: random_answer, question_id: question
-          }
+          }, format: :js
         end .to_not change(Answer, :count)
       end
 
-      it 'redirects to random_answer.question show view' do
-        delete :destroy, params: { id: random_answer, question_id: question }
-        expect(response).to redirect_to question_path(random_answer.question)
+      it 'renders template destroy' do
+        delete :destroy, params: { id: random_answer, question_id: question }, format: :js
+        expect(response).to render_template :destroy
       end
     end
 
     context ' for unauthenticated user' do
       it 'does not delete answer' do
-        expect { delete :destroy, params: { id: random_answer } }.to_not change(Answer, :count)
+        expect do
+          delete :destroy, params:
+         { id: random_answer },
+                           format: :js
+        end .to_not change(Answer, :count)
       end
 
-      it 'redirects to login page' do
-        delete :destroy, params: { id: random_answer }
-        expect(response).to redirect_to(new_user_session_path)
+      it 'returns 401 status' do
+        delete :destroy, params: { id: random_answer }, format: :js
+        expect(response).to have_http_status(401)
+      end
+    end
+  end
+
+  describe 'PATCH #update' do
+    context 'with valid attributes' do
+      before { login_with(user) }
+      it 'changes answer attributes' do
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        answer.reload
+        expect(answer.body).to eq 'new body'
+      end
+
+      it 'renders template update' do
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'with invalid attributes' do
+      before { login_with(user) }
+      it 'does not change answer attributes' do
+        expect do
+          patch :update, params:
+           { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+        end.to_not change(answer.reload, :body)
+      end
+
+      it 'renders template update' do
+        patch :update, params:
+         { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'for unauthenticated user' do
+      it 'does not update answer' do
+        expect do
+          patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        end.to_not change(answer.reload, :body)
+      end
+
+      it 'returns 401 status' do
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        expect(response).to have_http_status(401)
+      end
+    end
+
+    context 'not author answer' do
+      let(:second_user) { create(:user) }
+      before { login_with(second_user) }
+
+      it 'tries to update not his own answer' do
+        expect do
+          patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        end .to_not change(answer.reload, :body)
+      end
+
+      it 'renders template update' do
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        expect(response).to render_template :update
+      end
+    end
+  end
+
+  describe 'PATCH #make_best' do
+    context 'only the by author question' do
+      before { login_with(user) }
+
+      it 'update answer attribute best' do
+        patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
+        answer.reload
+
+        expect(answer).to be_best
+      end
+
+      it 'renders make_best view' do
+        patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
+
+        expect(response).to render_template :make_best
+      end
+    end
+
+    context 'not author question' do
+      let(:second_user) { create(:user) }
+
+      before { login_with(second_user) }
+
+      it 'does not update answer attribute best' do
+        patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
+        answer.reload
+
+        expect(answer).to_not be_best
+      end
+
+      it 'renders make best temolate' do
+        patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
+        answer.reload
+
+        expect(response).to render_template :make_best
+      end
+    end
+
+    context 'for unauthenticated user' do
+      it 'does not update answer attribute best' do
+        patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
+        answer.reload
+
+        expect(answer).to_not be_best
+      end
+
+      it 'returns 401 status' do
+        patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
+        expect(response).to have_http_status(401)
       end
     end
   end
