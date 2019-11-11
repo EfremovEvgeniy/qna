@@ -11,7 +11,6 @@ RSpec.describe Answer, type: :model do
     let(:answers) { create_list(:answer, 3, question: best_answer.question) }
 
     it 'by default return first best answer in collection' do
-      expect(best_answer.question.answers.first).to eq best_answer
       expect(best_answer.question.answers).to eq [best_answer, answers.first, answers.second, answers.third]
     end
   end
