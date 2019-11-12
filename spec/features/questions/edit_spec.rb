@@ -54,6 +54,7 @@ feature 'User can edit his question', "
         end
         within "#file_#{question.files.first.id}" do
           expect(page).to have_link 'delete file'
+
           click_on 'delete file'
         end
 
@@ -65,15 +66,17 @@ feature 'User can edit his question', "
   describe 'Authenticated user', js: true do
     background do
       sign_in(second_user)
-      visit root_path
     end
 
     scenario 'tries to edit not his own question' do
+      visit root_path
+
       expect(page).to have_no_link('edit')
     end
 
     scenario 'tries to delete attached file from not his question' do
       visit question_path(question)
+
       expect(page).to have_no_link('delete file')
     end
   end
