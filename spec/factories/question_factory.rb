@@ -8,6 +8,10 @@ FactoryBot.define do
       title { nil }
     end
 
+    trait :with_file do
+      files { Rack::Test::UploadedFile.new(Rails.root.join('spec/rails_helper.rb')) }
+    end
+
     factory :question_with_answer do
       after(:create) do |question|
         create(:answer, question: question)

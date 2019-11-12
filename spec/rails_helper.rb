@@ -39,6 +39,7 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers
   config.include ControllerMacros, type: :controller
   config.include FeatureHelpers, type: :feature
+  config.include ActionDispatch::TestProcess
 
   Capybara.javascript_driver = :selenium_chrome_headless
 
