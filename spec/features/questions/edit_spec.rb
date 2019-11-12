@@ -40,7 +40,7 @@ feature 'User can edit his question', "
         fill_in 'Edit body', with: 'edited body'
         attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
         click_on 'Save'
-        click_on 'show'
+        visit question_path(question)
       end
 
       scenario 'attaching files' do
@@ -62,20 +62,33 @@ feature 'User can edit his question', "
     end
   end
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     background do
       sign_in(second_user)
       visit root_path
     end
 
-    scenario 'tries to edit not his own question', js: true do
+    scenario 'tries to edit not his own question' do
       expect(page).to have_no_link('edit')
+    end
+
+    scenario 'tries to delete attached file from not his question' do
+      visit question_path(question)
+      expect(page).to have_no_link('delete file')
     end
   end
 
-  scenario 'Unauthenticated user can not edit question' do
-    visit root_path
+  describe 'Unauthenticated user' do
+    scenario 'can not edit question' do
+      visit root_path
 
-    expect(page).to have_no_link 'edit'
+      expect(page).to have_no_link 'edit'
+    end
+
+    scenario 'can not delete attached file' do
+      visit question_path(question)
+
+      expect(page).to have_no_link 'delete file'
+    end
   end
 end
