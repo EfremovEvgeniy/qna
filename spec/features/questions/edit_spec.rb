@@ -27,7 +27,7 @@ feature 'User can edit his question', "
       expect(page).to have_no_selector('textarea')
     end
 
-    scenario 'edits his own question with errors' do
+    scenario 'edits his answer with errors' do
       fill_in 'Edit title', with: ''
       click_on 'Save'
 

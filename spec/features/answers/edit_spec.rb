@@ -15,7 +15,7 @@ feature 'User can edit his answer', "
       click_on 'Edit'
     end
 
-    scenario 'edits his answer' do
+    scenario 'edits his own answer' do
       within '.answers' do
         fill_in 'Edit body', with: 'edited answer'
         click_on 'Save'
@@ -35,7 +35,7 @@ feature 'User can edit his answer', "
       end
     end
 
-    describe 'with attached files', js: true do
+    describe 'edits his own answer with', js: true do
       background do
         within '.answers' do
           fill_in 'Edit body', with: 'edited answer'
@@ -45,7 +45,7 @@ feature 'User can edit his answer', "
         end
       end
 
-      scenario 'edits his answer' do
+      scenario 'attaching files' do
         within '.answers' do
           expect(page).to have_link 'rails_helper.rb'
           expect(page).to have_link 'spec_helper.rb'
