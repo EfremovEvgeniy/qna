@@ -13,8 +13,13 @@ p= question.body
   .answer_errors
 
   = form_with model: [question, @answer], class: 'new-answer' do |f|
-    = f.label      :body
-    = f.text_area :body, id: :answer_body
+    p
+      = f.label      :body
+      = f.text_area :body, id: :answer_body
+    p
+      = f.label :files
+      = f.file_field :files, multiple: true
+      
     = f.submit 'Create'
 - else
   p= "You need to sign in to write your answer"
