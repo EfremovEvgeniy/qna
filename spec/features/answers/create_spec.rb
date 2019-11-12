@@ -36,7 +36,6 @@ feature 'User on the question page can write answer', "
       end
     end
 
-
     scenario 'creates answer with errors' do
       click_on 'Create'
 
