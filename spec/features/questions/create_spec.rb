@@ -33,6 +33,7 @@ feature 'User can create question', "
       fill_in 'Body', with: 'text text text'
       attach_file 'File', "#{Rails.root}/spec/rails_helper.rb"
       click_on 'Ask'
+      click_on 'show'
 
       expect(page).to have_link 'rails_helper.rb'
     end
