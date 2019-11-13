@@ -50,19 +50,24 @@ feature 'User can edit his answer', "
           expect(page).to have_link 'spec_helper.rb'
         end
       end
+    end
+  end
 
-      scenario 'deletes any attached files' do
-        sleep(1)
-        within "#file_#{answer.files.second.id}" do
-          expect(page).to have_link 'delete file'
-        end
-        within "#file_#{answer.files.first.id}" do
-          expect(page).to have_link 'delete file'
-          click_on 'delete file'
-        end
+  describe 'Author of answer', js: true do
+    background do
+      sign_in(answer.user)
+      answer.files.attach(create_file_blob)
+      visit question_path(answer.question)
+    end
 
-        expect(page).to have_no_link 'rails_helper.rb'
-      end
+    scenario 'deletes attached file' do
+      expect(page).to have_link 'delete file'
+      expect(page).to have_link 'image.jpg'
+
+      click_on 'delete file'
+
+      expect(page).to have_no_link 'image.jpg'
+      expect(page).to have_no_link 'delete file'
     end
   end
 

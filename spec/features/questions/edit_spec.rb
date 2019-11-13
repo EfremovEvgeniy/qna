@@ -34,33 +34,36 @@ feature 'User can edit his question', "
       expect(page).to have_content "Title can't be blank"
     end
 
-    describe 'edits his own question with', js: true do
-      background do
+    describe 'Author of question', js: true do
+      scenario 'edits attached files' do
         fill_in 'Edit title', with: 'edited title'
         fill_in 'Edit body', with: 'edited body'
         attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
         click_on 'Save'
-        sleep(2)
+        sleep(1)
         visit question_path(question)
-      end
 
-      scenario 'attaching files' do
         expect(page).to have_link 'rails_helper.rb'
         expect(page).to have_link 'spec_helper.rb'
       end
+    end
+  end
 
-      scenario 'deletes any attached file' do
-        within "#file_#{question.files.second.id}" do
-          expect(page).to have_link 'delete file'
-        end
-        within "#file_#{question.files.first.id}" do
-          expect(page).to have_link 'delete file'
+  describe 'Author of question', js: true do
+    background do
+      sign_in(question.user)
+      question.files.attach(create_file_blob)
+      visit question_path(question)
+    end
 
-          click_on 'delete file'
-        end
+    scenario 'deletes attached file' do
+      expect(page).to have_link 'delete file'
+      expect(page).to have_link 'image.jpg'
 
-        expect(page).to have_no_link 'rails_helper.rb'
-      end
+      click_on 'delete file'
+
+      expect(page).to have_no_link 'image.jpg'
+      expect(page).to have_no_link 'delete file'
     end
   end
 
