@@ -27,7 +27,7 @@ feature 'User can edit his question', "
       expect(page).to have_no_selector('textarea')
     end
 
-    scenario 'edits his answer with errors' do
+    scenario 'edits his question with errors' do
       fill_in 'Edit title', with: ''
       click_on 'Save'
 
@@ -40,6 +40,7 @@ feature 'User can edit his question', "
         fill_in 'Edit body', with: 'edited body'
         attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
         click_on 'Save'
+        sleep(2)
         visit question_path(question)
       end
 
