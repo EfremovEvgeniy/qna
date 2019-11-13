@@ -38,3 +38,5 @@ yarn-debug.log*
 
 /spec/fixtures
 
+.env
+
