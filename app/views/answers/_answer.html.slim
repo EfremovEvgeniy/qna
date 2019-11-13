@@ -1,7 +1,7 @@
 p
   div id = "answer_#{answer.id}"  
     = answer.body
-    = render 'answers/files_answer', answer: answer
+    = render 'files/resource', resource: answer
     - if current_user&.author_of?(answer)
         |    
         = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }

@@ -41,7 +41,6 @@ feature 'User can edit his answer', "
           fill_in 'Edit body', with: 'edited answer'
           attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
           click_on 'Save'
-          sleep(2)
         end
       end
 
@@ -53,6 +52,7 @@ feature 'User can edit his answer', "
       end
 
       scenario 'deletes any attached files' do
+        sleep(1)
         within "#file_#{answer.files.second.id}" do
           expect(page).to have_link 'delete file'
         end

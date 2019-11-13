@@ -5,13 +5,13 @@ RSpec.describe AttachmentsController, type: :controller do
   let!(:second_question) { create(:question) }
 
   describe 'DELETE #destroy' do
-    context 'Authenticated and author of question' do
+    context 'Authenticated and author of resource' do
       before do
         login_with(question.user)
         question.files.attach(create_file_blob)
       end
 
-      it 'delete your file from question' do
+      it 'delete your file from resource' do
         expect do
           delete :destroy, params:
          { id: question.files[0] }, format: :js
@@ -26,7 +26,7 @@ RSpec.describe AttachmentsController, type: :controller do
       end
     end
 
-    context 'Authenticated but not owner of question' do
+    context 'Authenticated but not owner of resource' do
       before do
         login_with(question.user)
         second_question.files.attach(create_file_blob)

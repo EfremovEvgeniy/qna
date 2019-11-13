@@ -2,7 +2,7 @@ h1= question.title
 p= question.body
 
 .files
-  = render 'files_question'
+  = render 'files/resource', resource: question
 
 .answers
   = render question.answers
