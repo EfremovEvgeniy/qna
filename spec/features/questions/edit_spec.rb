@@ -40,7 +40,9 @@ feature 'User can edit his question', "
         fill_in 'Edit body', with: 'edited body'
         attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
         click_on 'Save'
-        sleep(1)
+
+        expect(page).to have_content 'edited title'
+
         visit question_path(question)
 
         expect(page).to have_link 'rails_helper.rb'
