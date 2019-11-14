@@ -13,10 +13,15 @@ p
       = render 'shared/errors', resource: question    
 
     = form_with model: question, class: 'hidden', html: { id: "edit-question-#{question.id}" } do |f|
-      = f.label :title, 'Edit title'
-      = f.text_field :title
-      = f.label :body, 'Edit body'
-      = f.text_area :body
+      p
+        = f.label :title, 'Edit title'
+        = f.text_field :title
+      p
+        = f.label :body, 'Edit body'
+        = f.text_area :body
+      p
+        = f.label :files
+        = f.file_field :files, multiple: true, direct_upload: true
       = f.submit 'Save'
 
   

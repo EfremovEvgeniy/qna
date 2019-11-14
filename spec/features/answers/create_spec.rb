@@ -14,15 +14,25 @@ feature 'User on the question page can write answer', "
       visit question_path(question)
     end
 
-    scenario 'can write his answer' do
+    scenario 'can create his answer' do
       expect(page).to have_field('Body')
-      expect(page).to have_no_content('You need to sign in to write your answer')
 
       fill_in 'Body', with: 'my awesome answer'
       click_on 'Create'
 
       within '.answers' do
         expect(page).to have_content 'my awesome answer'
+      end
+    end
+
+    scenario 'can create answer with attached file' do
+      fill_in 'Body', with: 'my awesome answer'
+      attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+      click_on 'Create'
+
+      within '.answers' do
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'spec_helper.rb'
       end
     end
 
