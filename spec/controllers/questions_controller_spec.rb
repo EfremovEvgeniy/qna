@@ -35,6 +35,10 @@ RSpec.describe QuestionsController, type: :controller do
       before { login_with(user) }
       before { get :new }
 
+      it 'assigns new @question.link' do
+        expect(assigns(:question).links.first).to be_a_new(Link)
+      end
+
       it 'renders new view' do
         expect(response).to render_template :new
       end

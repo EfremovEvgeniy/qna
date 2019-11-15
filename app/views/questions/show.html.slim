@@ -4,6 +4,12 @@ p= question.body
 .files
   = render 'files/resource', resource: question
 
+.links
+  p Links:
+  ul
+    - question.links.each do |link|
+      li= link_to link.name, link.url
+
 .answers
   = render question.answers
 
