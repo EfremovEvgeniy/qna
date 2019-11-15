@@ -13,11 +13,5 @@ FactoryBot.define do
         create(:answer, question: question)
       end
     end
-
-    factory :question_with_link do
-      after(:create) do |question|
-        create(:link, linkable: question)
-      end
-    end
   end
 end

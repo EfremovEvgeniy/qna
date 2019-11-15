@@ -7,4 +7,8 @@ FactoryBot.define do
     name
     url { 'https://github.com/EfremovEvgeniy' }
   end
+
+  trait :invalid do
+    url { 'invalid/link' }
+  end
 end

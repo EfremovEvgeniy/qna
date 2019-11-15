@@ -6,38 +6,48 @@ feature 'User can add links to answer', "
   I'd like to be able to add links
 " do
   given!(:question) { create(:question) }
-  given(:gist_url) { 'https://gist.github.com/EfremovEvgeniy/79dcd2444231b4269f06068fcd143fd0' }
-  given(:gist_url_2) { 'https://gist.github.com/EfremovEvgeniy/f4ac4b60a3ab5afe34ce70c578143a9c' }
+  given(:url) { 'https://thinknetica.teachbase.ru/' }
+  given(:url_2) { 'https://github.com/EfremovEvgeniy' }
 
-  describe 'User adds', js: true do
+  describe 'Authenticated user adds', js: true do
     background do
       sign_in(question.user)
       visit question_path(question)
       fill_in 'Body', with: 'my awesome answer'
-      fill_in 'Link name', with: 'My gist'
-      fill_in 'Url', with: gist_url
+      fill_in 'Link name', with: 'My url'
+      # fill_in 'Url', with: url
     end
 
     scenario 'link when answer question' do
+      fill_in 'Url', with: url
       click_on 'Create'
 
       within '.answers' do
-        expect(page).to have_link 'My gist', href: gist_url
+        expect(page).to have_link 'My url', href: url
       end
     end
 
     scenario 'links when answer question' do
+      fill_in 'Url', with: url
       click_on 'add more'
       within all('.nested-fields')[1] do
-        fill_in 'Link name', with: 'My gist 2'
-        fill_in 'Url', with: gist_url_2
+        fill_in 'Link name', with: 'My url 2'
+        fill_in 'Url', with: url_2
       end
       click_on 'Create'
 
       within '.answers' do
-        expect(page).to have_link 'My gist', href: gist_url
-        expect(page).to have_link 'My gist 2', href: gist_url_2
+        expect(page).to have_link 'My url', href: url
+        expect(page).to have_link 'My url 2', href: url_2
       end
+    end
+
+    scenario 'invalid link' do
+      fill_in 'Url', with: 'invalid/link'
+      click_on 'Create'
+
+      expect(page).to have_no_link 'My url', href: 'invalid/link'
+      expect(page).to have_content 'Links url is invalid'
     end
   end
 end
