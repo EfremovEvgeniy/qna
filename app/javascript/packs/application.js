@@ -11,6 +11,7 @@ require("jquery")
 require("custom/answers.js")
 require("custom/questions.js")
 require("custom/direct_uploads.js")
+import 'cocoon-js';
 
 
 

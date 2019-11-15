@@ -7,20 +7,42 @@ feature 'User can add links to question', "
 " do
   given!(:user) { create(:user) }
   given(:gist_url) { 'https://gist.github.com/EfremovEvgeniy/79dcd2444231b4269f06068fcd143fd0' }
+  given(:gist_url_2) { 'https://gist.github.com/EfremovEvgeniy/f4ac4b60a3ab5afe34ce70c578143a9c' }
 
-  scenario 'User adds link when asks question' do
-    sign_in(user)
-    visit new_question_path
-    fill_in 'Title', with: 'Test question'
-    fill_in 'Body', with: 'text text text'
-    fill_in 'Link name', with: 'My gist'
-    fill_in 'Url', with: gist_url
-    click_on 'Ask'
+  describe 'User adds', js: true do
+    background do
+      sign_in(user)
+      visit new_question_path
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'text text text'
+      fill_in 'Link name', with: 'My gist'
+      fill_in 'Url', with: gist_url
+    end
 
-    expect(page).to have_content 'Test question'
+    scenario 'link when asks question' do
+      click_on 'Ask'
 
-    click_on 'show'
+      expect(page).to have_content 'Test question'
 
-    expect(page).to have_link 'My gist', href: gist_url
+      click_on 'show'
+
+      expect(page).to have_link 'My gist', href: gist_url
+    end
+
+    scenario 'links when asks question' do
+      click_on 'add more'
+      within all('.nested-fields')[1] do
+        fill_in 'Link name', with: 'My gist 2'
+        fill_in 'Url', with: gist_url_2
+      end
+      click_on 'Ask'
+
+      expect(page).to have_content 'Test question'
+
+      click_on 'show'
+
+      expect(page).to have_link 'My gist', href: gist_url
+      expect(page).to have_link 'My gist 2', href: gist_url_2
+    end
   end
 end
