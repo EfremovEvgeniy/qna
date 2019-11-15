@@ -84,6 +84,24 @@ feature 'User can edit his answer', "
     end
   end
 
+  describe 'Author of answer', js: true do
+    given!(:link) { create(:link, linkable: answer) }
+    background do
+      sign_in(answer.user)
+      visit question_path(answer.question)
+    end
+
+    scenario 'deletes link' do
+      click_on 'Edit'
+      within all('.nested-fields')[0] do
+        click_on 'delete link'
+      end
+      click_on 'Save'
+
+      expect(page).to have_no_link link.name
+    end
+  end
+
   describe 'Authenticated user' do
     background do
       sign_in(second_user)

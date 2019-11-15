@@ -45,20 +45,4 @@ feature 'User can add links to question', "
       expect(page).to have_link 'My gist 2', href: gist_url_2
     end
   end
-
-  describe 'Author of question' do
-    given!(:question_with_link) { create(:question_with_link) }
-    background do
-      sign_in(question_with_link.user)
-      visit questions_path
-    end
-
-    scenario 'deletes link' do
-      click_on 'edit'
-      click_on 'delete link'
-      visit questions_path(question_with_link)
-
-      expect(page).to have_no_link 'MyLink'
-    end
-  end
 end

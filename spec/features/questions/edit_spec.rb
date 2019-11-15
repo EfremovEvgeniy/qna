@@ -82,6 +82,23 @@ feature 'User can edit his question', "
     end
   end
 
+  describe 'Author of question', js: true do
+    given!(:link) { create(:link, linkable: question) }
+    background do
+      sign_in(question.user)
+      visit questions_path
+    end
+
+    scenario 'deletes link' do
+      click_on 'edit'
+      click_on 'delete link'
+      click_on 'Save'
+      visit question_path(question)
+
+      expect(page).to have_no_link link.name
+    end
+  end
+
   describe 'Authenticated user', js: true do
     background do
       sign_in(second_user)
