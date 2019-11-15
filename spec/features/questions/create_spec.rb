@@ -7,7 +7,7 @@ feature 'User can create question', "
 " do
   given(:user) { create(:user) }
 
-  describe 'Authenticated user', js: true do
+  describe 'Authenticated user' do
     background do
       sign_in(user)
       visit questions_path

@@ -7,6 +7,7 @@ feature 'User can edit his question', "
   " do
   given(:second_user) { create(:user) }
   given!(:question) { create(:question) }
+  given(:link) { create(:link, linkable: question) }
 
   describe 'Authenticated user', js: true do
     background do
@@ -32,6 +33,18 @@ feature 'User can edit his question', "
       click_on 'Save'
 
       expect(page).to have_content "Title can't be blank"
+    end
+
+    scenario 'adds link to question' do
+      fill_in 'Edit title', with: 'edited title'
+      fill_in 'Edit body', with: 'edited body'
+      click_on 'add more'
+      fill_in 'Link name', with: link.name
+      fill_in 'Url', with: link.url
+      click_on 'Save'
+      visit question_path(question)
+
+      expect(page).to have_link link.name, href: link.url
     end
 
     describe 'Author of question', js: true do
