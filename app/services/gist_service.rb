@@ -1,6 +1,4 @@
 class GistService
-  attr_reader :gist_id
-
   def initialize(gist_id, client: default_client)
     @gist_id = gist_id
     @client = client

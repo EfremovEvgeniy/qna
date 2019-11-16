@@ -7,6 +7,7 @@ p
       ul
         - answer.links.each do |link|
           li= link_to link.name, link.url
+          p= link.gist_content
           
     - if current_user&.author_of?(answer)
         |    

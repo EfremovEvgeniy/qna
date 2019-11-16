@@ -6,13 +6,6 @@ describe GistService do
   let(:gist_service) { described_class.new(gist_id) }
   let(:second_gist_service) { described_class.new(ivnalid_gist_id) }
 
-  describe 'intialization' do
-    it 'assigns gists accessor' do
-      expect(gist_service.gist_id).to eq gist_id
-      expect(second_gist_service.gist_id).to eq ivnalid_gist_id
-    end
-  end
-
   describe 'public methods' do
     describe '#content' do
       it 'get content' do

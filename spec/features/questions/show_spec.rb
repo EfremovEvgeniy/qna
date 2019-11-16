@@ -54,4 +54,21 @@ feature 'User can see question page with answers', "
       end
     end
   end
+
+  describe 'User' do
+    given!(:link) { create(:link, :gist, linkable: question) }
+    given!(:second_link) { create(:link, :gist, linkable: question_with_answer.answers.first) }
+
+    scenario 'can see question gist content on page' do
+      visit question_path(question)
+
+      expect(page).to have_content 'my new gist for test'
+    end
+
+    scenario 'can see answer gist content on page' do
+      visit question_path(question_with_answer)
+
+      expect(page).to have_content 'my new gist for test'
+    end
+  end
 end
