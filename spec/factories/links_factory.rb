@@ -11,4 +11,8 @@ FactoryBot.define do
   trait :invalid do
     url { 'invalid/link' }
   end
+
+  trait :gist do
+    url { 'https://gist.github.com/EfremovEvgeniy/4d7ba68e703433abb537d9c193b0af4c' }
+  end
 end

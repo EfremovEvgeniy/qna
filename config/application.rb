@@ -23,5 +23,6 @@ module Qna
                        routing_specs: false,
                        request_specs: false
     end
+    config.autoload_paths << "#{Rails.root}/app/services/"
   end
 end
