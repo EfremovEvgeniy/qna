@@ -13,7 +13,7 @@ class QuestionsController < ApplicationController
 
   def new
     question.links.build
-    question.trophy = Trophy.new
+    question.build_trophy
   end
 
   def edit; end

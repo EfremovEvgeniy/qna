@@ -7,7 +7,6 @@ class GistService
   def content
     @client.gist(@gist_id).files.first[1].content
   rescue Octokit::NotFound
-    nil
   end
 
   private

@@ -22,7 +22,7 @@ feature 'User can view a list of badges' do
   end
 
   scenario 'Unauthenticated can not see trophies' do
-    visit trophies_path
+    visit user_trophies_path
     expect(page).to_not have_selector('#trophies')
   end
 end

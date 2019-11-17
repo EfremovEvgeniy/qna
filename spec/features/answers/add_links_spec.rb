@@ -15,7 +15,6 @@ feature 'User can add links to answer', "
       visit question_path(question)
       fill_in 'Body', with: 'my awesome answer'
       fill_in 'Link name', with: 'My url'
-      # fill_in 'Url', with: url
     end
 
     scenario 'link when answer question' do
