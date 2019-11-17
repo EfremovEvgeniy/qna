@@ -1,7 +1,8 @@
 <nav>
   <span>
     <% if user_signed_in? %>
-      <%= link_to "Log out", destroy_user_session_path, method: :delete %> 
+      <%= link_to "Log out", destroy_user_session_path, method: :delete %>
+      <%= link_to "My trophies", trophies_path %> 
     <% else %>
       <%= link_to "Sign up", new_user_registration_path %>
     <% end %>

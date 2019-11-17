@@ -17,4 +17,10 @@
     .links
       = link_to_add_association 'add more', f, :links
 
+
+  .trophy
+    = f.fields_for :trophy do |trophy|
+      = trophy.text_field :name
+      = trophy.file_field :image, direct_upload: true
+
   = f.submit 'Ask'

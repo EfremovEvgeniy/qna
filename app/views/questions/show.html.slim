@@ -4,6 +4,12 @@ p= question.body
 .files
   = render 'files/resource', resource: question
 
+.trophies
+  - if question.trophy&.persisted?
+    p 
+      
+    = render question.trophy
+
 .links
   ul
     - question.links.each do |link|

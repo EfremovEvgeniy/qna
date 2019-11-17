@@ -15,6 +15,14 @@ class Answer < ApplicationRecord
     transaction do
       question.answers.update_all(best: false)
       update!(best: true)
+      reward! if question.trophy
     end
+  end
+
+  private
+
+  def reward!
+    user = question.answers.where(best: true).first&.user
+    question.trophy.update!(user: user)
   end
 end

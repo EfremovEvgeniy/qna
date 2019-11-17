@@ -2,8 +2,9 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
-  let(:question) { create(:question, user: user) }
-  let(:answer) { create(:answer, question: question, user: user) }
+  let!(:question) { create(:question, user: user) }
+  let!(:trophy) { create(:trophy, question: question) }
+  let!(:answer) { create(:answer, question: question, user: user) }
 
   describe 'POST #create' do
     context 'with valid attributes' do
@@ -198,6 +199,14 @@ RSpec.describe AnswersController, type: :controller do
         answer.reload
 
         expect(answer).to be_best
+      end
+
+      it 'sets trophy to user' do
+        patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
+        answer.reload
+        trophy.reload
+
+        expect(answer.user).to eq trophy.user
       end
 
       it 'renders make_best view' do

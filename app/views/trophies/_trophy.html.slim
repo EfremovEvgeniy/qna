@@ -1,0 +1,4 @@
+.trophy
+  p = trophy.name
+  - if trophy.image.attached?
+      p = image_tag url_for(trophy.image)

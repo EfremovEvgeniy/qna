@@ -1,0 +1,21 @@
+- if @trophies.any?
+    table#trophies class='table' 
+      thead 
+        tr 
+          th Title question
+          th Image
+          th Name trophy
+      tbody
+        - @trophies.each do |trophy|
+            tr
+              td = trophy.question.title
+              td
+                - if trophy.image.attached? 
+                    img src = url_for(trophy.image)
+              td = trophy.name
+    p
+      b Count trophies:  
+      = @trophies.count           
+- else
+    p You have not trophies.
+    
