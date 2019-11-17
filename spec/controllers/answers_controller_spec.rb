@@ -34,6 +34,47 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
 
+    context 'with link' do
+      before { login_with(user) }
+      it 'saves new, related to question answer in database' do
+        expect do
+          post :create, params: {
+            question_id: question, answer: {
+              body: 'MyBody',
+              links_attributes: { '0' => { name: 'LinkName',
+                                           url: 'https://www.linkexample.com/',
+                                           _destroy: false } }
+            }
+          }, format: :js
+        end .to change(question.answers, :count).by(1)
+      end
+
+      it 'is linked to user' do
+        expect do
+          post :create, params: {
+            question_id: question, answer: {
+              body: 'MyBody',
+              links_attributes: { '0' => { name: 'LinkName',
+                                           url: 'https://www.linkexample.com/',
+                                           _destroy: false } }
+            }
+          }, format: :js
+        end .to change(user.answers, :count).by(1)
+      end
+
+      it 'renders create template' do
+        post :create, params: {
+          question_id: question, answer: {
+            body: 'MyBody',
+            links_attributes: { '0' => { name: 'LinkName',
+                                         url: 'https://www.linkexample.com/',
+                                         _destroy: false } }
+          }
+        }, format: :js
+        expect(response).to render_template :create
+      end
+    end
+
     context 'for unauthenticated user' do
       it 'does not create answer' do
         expect do
@@ -140,6 +181,37 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'renders template update' do
         patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'update additional attributes' do
+      let!(:answer_with_link) { create(:answer) }
+      let!(:link) { create(:link, linkable: answer_with_link) }
+
+      before { login_with(answer_with_link.user) }
+      it 'deletes link from answer' do
+        patch :update, params: {
+          id: answer_with_link, answer: {
+            body: 'MyBody',
+            links_attributes: { '0' => { name: link.name,
+                                         url: link.url,
+                                         _destroy: '1', id: link } }
+          }
+        }, format: :js
+        answer_with_link.reload
+        expect(answer_with_link.links.count).to be_zero
+      end
+
+      it 'renders template update' do
+        patch :update, params: {
+          id: answer_with_link, answer: {
+            body: 'MyBody',
+            links_attributes: { '0' => { name: link.name,
+                                         url: link.url,
+                                         _destroy: '1', id: link } }
+          }
+        }, format: :js
         expect(response).to render_template :update
       end
     end

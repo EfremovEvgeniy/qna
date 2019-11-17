@@ -79,6 +79,46 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
+    context 'with link' do
+      before { login_with(user) }
+      it 'saves the new question in the database' do
+        expect do
+          post :create, params: {
+            question: {
+              title: 'MyTitle', body: 'MyBody',
+              links_attributes: { '0' => { name: 'LinkName',
+                                           url: 'https://www.linkexample.com/',
+                                           _destroy: false } }
+            }
+          }
+        end .to change(user.questions, :count).by(1)
+      end
+
+      it 'redirects to index view' do
+        post :create, params: {
+          question: {
+            title: 'MyTitle', body: 'MyBody',
+            links_attributes: { '0' => { name: 'LinkName',
+                                         url: 'https://www.linkexample.com/',
+                                         _destroy: false } }
+          }
+        }
+        expect(response).to redirect_to questions_path
+      end
+
+      it 'renders a flash message' do
+        post :create, params: {
+          question: {
+            title: 'MyTitle', body: 'MyBody',
+            links_attributes: { '0' => { name: 'LinkName',
+                                         url: 'https://www.linkexample.com/',
+                                         _destroy: false } }
+          }
+        }
+        expect(flash[:notice]).to eq 'Your question successfully created.'
+      end
+    end
+
     context 'with invalid attributes' do
       before { login_with(user) }
       it 'does not save the question' do
@@ -148,7 +188,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
-    context ' for unauthenticated user' do
+    context 'for unauthenticated user' do
       it 'tries to delete not user\'s own questions' do
         expect do
           delete :destroy, params:
@@ -164,6 +204,9 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    let!(:question_with_link) { create(:question) }
+    let!(:link) { create(:link, linkable: question_with_link) }
+
     context 'with valid attributes' do
       before { login_with(user) }
       it 'changes question attributes' do
@@ -177,6 +220,40 @@ RSpec.describe QuestionsController, type: :controller do
       it 'renders template update' do
         patch :update, params:
         { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'update additional attributes' do
+      before { login_with(question_with_link.user) }
+      it 'deletes link from question' do
+        patch :update, params: {
+          id: question_with_link, question: {
+            title: question_with_link.title, body: question_with_link.body,
+            links_attributes: {
+              '0' => { name: link.name,
+                       url: link.url,
+                       _destroy: '1', id: link }
+            }
+          }
+        }, format: :js
+        question_with_link.reload
+        
+        expect(question_with_link.links.count).to be_zero
+      end
+
+      it 'renders template update' do
+        patch :update, params: {
+          id: question_with_link, question: {
+            title: question_with_link.title, body: question_with_link.body,
+            links_attributes: {
+              '0' => { name: link.name,
+                       url: link.url,
+                       _destroy: '1', id: link }
+            }
+          }
+        }, format: :js
+
         expect(response).to render_template :update
       end
     end
