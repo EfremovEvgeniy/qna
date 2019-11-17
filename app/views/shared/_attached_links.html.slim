@@ -1,0 +1,4 @@
+ul
+  - resource.links.each do |link|
+    li= link_to link.name, link.url
+    p= link.gist_content

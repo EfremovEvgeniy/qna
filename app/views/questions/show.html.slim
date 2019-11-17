@@ -2,7 +2,7 @@ h1= question.title
 p= question.body
 
 .files
-  = render 'files/resource', resource: question
+  = render 'shared/attached_files', resource: question
 
 .trophies
   - if question.trophy&.persisted?
@@ -10,10 +10,7 @@ p= question.body
       = render question.trophy
 
 .links
-  ul
-    - question.links.each do |link|
-      li= link_to link.name, link.url
-      p= link.gist_content
+  = render 'shared/attached_links', resource: question
 
 .answers
   = render question.answers

@@ -1,13 +1,10 @@
 p
   div id = "answer_#{answer.id}"  
     = answer.body
-    = render 'files/resource', resource: answer
+    = render 'shared/attached_files', resource: answer
 
     .links
-      ul
-        - answer.links.each do |link|
-          li= link_to link.name, link.url
-          p= link.gist_content
+      = render 'shared/attached_links', resource: answer
           
     - if current_user&.author_of?(answer)
         |    
