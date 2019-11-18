@@ -238,7 +238,7 @@ RSpec.describe QuestionsController, type: :controller do
           }
         }, format: :js
         question_with_link.reload
-        
+
         expect(question_with_link.links.count).to be_zero
       end
 

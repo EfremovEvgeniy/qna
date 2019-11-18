@@ -14,6 +14,13 @@ RSpec.describe Link, type: :model do
       let(:question) { create(:question) }
       let(:link) { create(:link, linkable: question) }
       let(:gist) { create(:link, :gist, linkable: question) }
+      let(:gist_id) { gist.url.split('/').last }
+      let(:gist_service) { double(:gist_service) }
+
+      before do
+        allow(GistService).to receive(:new).with(gist_id).and_return(gist_service)
+        allow(gist_service).to receive(:content).and_return('my new gist for test')
+      end
 
       it 'return content from gist' do
         expect(gist.gist_content).to eq 'my new gist for test'
