@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe UserTrophiesController, type: :controller do
+RSpec.describe User::TrophiesController, type: :controller do
   let(:user) { create(:user) }
   let!(:question) { create(:question, user: user) }
   let!(:trophies) { create_list :trophy, 3, question: question, user: user }

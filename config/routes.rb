@@ -9,5 +9,7 @@ Rails.application.routes.draw do
   end
 
   resources :attachments, only: :destroy
-  get '/user/trophies', to: 'user_trophies#index'
+  namespace :user do
+    resources :trophies, only: :index
+  end
 end
