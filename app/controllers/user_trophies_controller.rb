@@ -1,4 +1,4 @@
-class TrophiesController < ApplicationController
+class UserTrophiesController < ApplicationController
   before_action :authenticate_user!
 
   def index
