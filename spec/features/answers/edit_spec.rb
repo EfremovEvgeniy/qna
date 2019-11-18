@@ -7,6 +7,7 @@ feature 'User can edit his answer', "
   " do
   given(:second_user) { create(:user) }
   given!(:answer) { create(:answer) }
+  given(:link) { create(:link, linkable: answer) }
 
   describe 'Authenticated user', js: true do
     background do
@@ -32,6 +33,18 @@ feature 'User can edit his answer', "
         click_on 'Save'
 
         expect(page).to have_content "Body can't be blank"
+      end
+    end
+
+    scenario 'adds link to answer' do
+      within '.answers' do
+        fill_in 'Edit body', with: 'edited answer'
+        click_on 'add more'
+        fill_in 'Link name', with: link.name
+        fill_in 'Url', with: link.url
+        click_on 'Save'
+
+        expect(page).to have_link link.name, href: link.url
       end
     end
 
@@ -68,6 +81,24 @@ feature 'User can edit his answer', "
 
       expect(page).to have_no_link 'image.jpg'
       expect(page).to have_no_link 'delete file'
+    end
+  end
+
+  describe 'Author of answer', js: true do
+    given!(:link) { create(:link, linkable: answer) }
+    background do
+      sign_in(answer.user)
+      visit question_path(answer.question)
+    end
+
+    scenario 'deletes link' do
+      click_on 'Edit'
+      within all('.nested-fields')[0] do
+        click_on 'delete link'
+      end
+      click_on 'Save'
+
+      expect(page).to have_no_link link.name
     end
   end
 

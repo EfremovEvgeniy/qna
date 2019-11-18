@@ -9,4 +9,7 @@ Rails.application.routes.draw do
   end
 
   resources :attachments, only: :destroy
+  namespace :user do
+    resources :trophies, only: :index
+  end
 end

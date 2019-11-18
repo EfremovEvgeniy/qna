@@ -1,4 +1,6 @@
 class Answer < ApplicationRecord
+  include LinksAssociations
+
   belongs_to :question
   belongs_to :user
 
@@ -12,6 +14,7 @@ class Answer < ApplicationRecord
     transaction do
       question.answers.update_all(best: false)
       update!(best: true)
+      question.trophy&.update!(user: user)
     end
   end
 end

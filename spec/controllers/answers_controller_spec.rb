@@ -2,8 +2,9 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
-  let(:question) { create(:question, user: user) }
-  let(:answer) { create(:answer, question: question, user: user) }
+  let!(:question) { create(:question, user: user) }
+  let!(:trophy) { create(:trophy, question: question) }
+  let!(:answer) { create(:answer, question: question, user: user) }
 
   describe 'POST #create' do
     context 'with valid attributes' do
@@ -29,6 +30,47 @@ RSpec.describe AnswersController, type: :controller do
       it 'renders create template' do
         post :create, params:
         { question_id: question, answer: attributes_for(:answer) }, format: :js
+        expect(response).to render_template :create
+      end
+    end
+
+    context 'with link' do
+      before { login_with(user) }
+      it 'saves new, related to question answer in database' do
+        expect do
+          post :create, params: {
+            question_id: question, answer: {
+              body: 'MyBody',
+              links_attributes: { '0' => { name: 'LinkName',
+                                           url: 'https://www.linkexample.com/',
+                                           _destroy: false } }
+            }
+          }, format: :js
+        end .to change(question.answers, :count).by(1)
+      end
+
+      it 'is linked to user' do
+        expect do
+          post :create, params: {
+            question_id: question, answer: {
+              body: 'MyBody',
+              links_attributes: { '0' => { name: 'LinkName',
+                                           url: 'https://www.linkexample.com/',
+                                           _destroy: false } }
+            }
+          }, format: :js
+        end .to change(user.answers, :count).by(1)
+      end
+
+      it 'renders create template' do
+        post :create, params: {
+          question_id: question, answer: {
+            body: 'MyBody',
+            links_attributes: { '0' => { name: 'LinkName',
+                                         url: 'https://www.linkexample.com/',
+                                         _destroy: false } }
+          }
+        }, format: :js
         expect(response).to render_template :create
       end
     end
@@ -143,6 +185,37 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
 
+    context 'update additional attributes' do
+      let!(:answer_with_link) { create(:answer) }
+      let!(:link) { create(:link, linkable: answer_with_link) }
+
+      before { login_with(answer_with_link.user) }
+      it 'deletes link from answer' do
+        patch :update, params: {
+          id: answer_with_link, answer: {
+            body: 'MyBody',
+            links_attributes: { '0' => { name: link.name,
+                                         url: link.url,
+                                         _destroy: '1', id: link } }
+          }
+        }, format: :js
+        answer_with_link.reload
+        expect(answer_with_link.links.count).to be_zero
+      end
+
+      it 'renders template update' do
+        patch :update, params: {
+          id: answer_with_link, answer: {
+            body: 'MyBody',
+            links_attributes: { '0' => { name: link.name,
+                                         url: link.url,
+                                         _destroy: '1', id: link } }
+          }
+        }, format: :js
+        expect(response).to render_template :update
+      end
+    end
+
     context 'with invalid attributes' do
       before { login_with(user) }
       it 'does not change answer attributes' do
@@ -198,6 +271,14 @@ RSpec.describe AnswersController, type: :controller do
         answer.reload
 
         expect(answer).to be_best
+      end
+
+      it 'sets trophy to user' do
+        patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
+        answer.reload
+        trophy.reload
+
+        expect(answer.user).to eq trophy.user
       end
 
       it 'renders make_best view' do

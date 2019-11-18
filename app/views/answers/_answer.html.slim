@@ -1,7 +1,11 @@
 p
-  div id = "answer_#{answer.id}"  
+  div id = "answer_#{answer.id}" class="answer" 
     = answer.body
-    = render 'files/resource', resource: answer
+    = render 'shared/attached_files', resource: answer
+
+    .links
+      = render 'shared/attached_links', resource: answer
+          
     - if current_user&.author_of?(answer)
         |    
         = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
@@ -14,13 +18,19 @@ p
           p
             = f.label :files
             = f.file_field :files, multiple: true, direct_upload: true
+          .links
+            = f.fields_for :links do |link|
+              = render 'link_fields', f: link
+            .links
+              = link_to_add_association 'add more', f, :links
+
           = f.submit 'Save'
 
     - if answer.best?
         span#best_answer
           'You marked this answer like best!'
 
-    - if current_user&.author_of?(answer.question) && !answer.best?
+    - if current_user&.author_of?(answer.question) && !answer.best? && !current_user.author_of?(answer)
         = link_to  'Best answer', make_best_answer_path(answer), method: :patch, remote: true
 
 

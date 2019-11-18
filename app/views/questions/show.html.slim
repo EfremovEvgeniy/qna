@@ -2,7 +2,15 @@ h1= question.title
 p= question.body
 
 .files
-  = render 'files/resource', resource: question
+  = render 'shared/attached_files', resource: question
+
+.trophies
+  - if question.trophy&.persisted?
+    p 
+      = render question.trophy
+
+.links
+  = render 'shared/attached_links', resource: question
 
 .answers
   = render question.answers
@@ -17,6 +25,14 @@ p= question.body
     p
       = f.label :files
       = f.file_field :files, multiple: true, direct_upload: true
+
+    p Links:
+    p
+      .links
+        = f.fields_for :links do |link|
+          = render 'link_fields', f: link
+        .links
+          = link_to_add_association 'add more', f, :links
       
     = f.submit 'Create'
 - else

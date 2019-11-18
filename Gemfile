@@ -34,7 +34,11 @@ gem 'devise'
 
 gem 'jquery-rails'
 
+# gem for amazon
 gem 'aws-sdk', '~> 3.0', '>= 3.0.1'
+
+# gem for polymorphic associations
+gem 'cocoon'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

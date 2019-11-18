@@ -1,6 +1,6 @@
 = render 'shared/errors', resource: question
 
-= form_with model: question do |f|
+= form_with model: question, local: true do |f|
   p
     = f.label :title
     = f.text_field :title
@@ -10,4 +10,17 @@
   p  
     = f.label :files
     = f.file_field :files, multiple: true, direct_upload: true
+
+  .links
+    = f.fields_for :links do |link|
+      = render 'link_fields', f: link
+    .links
+      = link_to_add_association 'add more', f, :links
+
+
+  .trophy
+    = f.fields_for :trophy do |trophy|
+      = trophy.text_field :name
+      = trophy.file_field :image, direct_upload: true
+
   = f.submit 'Ask'

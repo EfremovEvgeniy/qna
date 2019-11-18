@@ -1,0 +1,8 @@
+ul
+  - resource.links.each do |link|
+    - if link.gist?
+      .gist data-gist="#{link.url.split('/').last}" 
+        a Loading
+    - else
+      p= link_to link.name, link.url
+

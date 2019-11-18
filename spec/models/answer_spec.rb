@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
+  include_examples 'links associations'
+
   it { should belong_to(:question) }
   it { should belong_to(:user) }
 

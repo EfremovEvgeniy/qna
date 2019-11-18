@@ -31,3 +31,6 @@
 
 en:
   hello: "Hello world"
+  cocoon:
+    defaults:
+      remove: "delete link"
