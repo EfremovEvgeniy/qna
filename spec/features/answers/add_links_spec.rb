@@ -21,9 +21,7 @@ feature 'User can add links to answer', "
       fill_in 'Url', with: url
       click_on 'Create'
 
-      within '.answers' do
-        expect(page).to have_link 'My url', href: url
-      end
+      expect(page).to have_link 'My url', href: url
     end
 
     scenario 'links when answer question' do

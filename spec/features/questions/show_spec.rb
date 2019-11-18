@@ -55,7 +55,7 @@ feature 'User can see question page with answers', "
     end
   end
 
-  describe 'User' do
+  describe 'User', js: true do
     given!(:link) { create(:link, :gist, linkable: question) }
     given!(:second_link) { create(:link, :gist, linkable: question_with_answer.answers.first) }
 
