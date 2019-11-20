@@ -1,5 +1,5 @@
 class Question < ApplicationRecord
-  include LinksAssociations
+  include HasLinks
 
   has_many :answers, dependent: :destroy
   has_one :trophy, dependent: :destroy

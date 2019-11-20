@@ -1,5 +1,5 @@
 class Answer < ApplicationRecord
-  include LinksAssociations
+  include HasLinks
 
   belongs_to :question
   belongs_to :user

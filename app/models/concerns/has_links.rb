@@ -1,4 +1,4 @@
-module LinksAssociations
+module HasLinks
   extend ActiveSupport::Concern
 
   included do
