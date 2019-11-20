@@ -1,5 +1,6 @@
 class Question < ApplicationRecord
   include HasLinks
+  include Votable
 
   has_many :answers, dependent: :destroy
   has_one :trophy, dependent: :destroy
