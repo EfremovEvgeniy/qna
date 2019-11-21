@@ -12,7 +12,6 @@ feature 'User can give vote to answer', "
 
   describe 'Authenticated users', js: true do
     describe 'vote' do
-
       background do
         sign_in second_user
         visit question_path(question)

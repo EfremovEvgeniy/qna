@@ -7,25 +7,19 @@ module Votable
 
   def upvote!(user)
     transaction do
-      delete_vote(user)
+      votes.where(user_id: user).delete_all
       votes.create!(user: user, value: 1)
     end
   end
 
   def downvote!(user)
     transaction do
-      delete_vote(user)
+      votes.where(user_id: user).delete_all
       votes.create!(user: user, value: -1)
     end
   end
 
   def total_votes
     votes.sum(:value)
-  end
-
-  private
-
-  def delete_vote(user)
-    votes.where(user_id: user).delete_all
   end
 end
