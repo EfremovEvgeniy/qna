@@ -18,11 +18,12 @@ feature 'When user choose best answer his reward answers author', "
 
     scenario 'choose best answer and reward author' do
       click_on 'Best answer'
-      click_on 'Log out'
-      sign_in(second_user)
-      click_on 'My trophies'
+      in_browser(:two) do
+        sign_in(second_user)
+        click_on 'My trophies'
 
-      expect(page).to have_content trophy.name
+        expect(page).to have_content trophy.name
+      end
     end
   end
 end

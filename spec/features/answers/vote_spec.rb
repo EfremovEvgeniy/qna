@@ -12,6 +12,7 @@ feature 'User can give vote to answer', "
 
   describe 'Authenticated users', js: true do
     describe 'vote' do
+
       background do
         sign_in second_user
         visit question_path(question)
@@ -22,12 +23,13 @@ feature 'User can give vote to answer', "
 
         expect(page).to have_content 'Total votes:1'
 
-        click_on 'Log out'
-        sign_in third_user
-        visit question_path(question)
-        click_on 'up'
+        in_browser(:two) do
+          sign_in third_user
+          visit question_path(question)
+          click_on 'up'
 
-        expect(page).to have_content 'Total votes:2'
+          expect(page).to have_content 'Total votes:2'
+        end
       end
 
       scenario 'down and up' do
@@ -35,12 +37,13 @@ feature 'User can give vote to answer', "
 
         expect(page).to have_content 'Total votes:-1'
 
-        click_on 'Log out'
-        sign_in third_user
-        visit question_path(question)
-        click_on 'up'
+        in_browser(:two) do
+          sign_in third_user
+          visit question_path(question)
+          click_on 'up'
 
-        expect(page).to have_content 'Total votes:0'
+          expect(page).to have_content 'Total votes:0'
+        end
       end
 
       scenario 'down and down' do
@@ -48,12 +51,13 @@ feature 'User can give vote to answer', "
 
         expect(page).to have_content 'Total votes:-1'
 
-        click_on 'Log out'
-        sign_in third_user
-        visit question_path(question)
-        click_on 'down'
+        in_browser(:two) do
+          sign_in third_user
+          visit question_path(question)
+          click_on 'down'
 
-        expect(page).to have_content 'Total votes:-2'
+          expect(page).to have_content 'Total votes:-2'
+        end
       end
 
       scenario 'can give only one vote' do
