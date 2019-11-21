@@ -12,6 +12,7 @@ require("custom/answers.js")
 require("custom/questions.js")
 require("custom/direct_uploads.js")
 require("custom/gist.js")
+require("custom/votes.js")
 import 'cocoon-js';
 
 // Uncomment to copy all static images under ../images to the output folder and reference

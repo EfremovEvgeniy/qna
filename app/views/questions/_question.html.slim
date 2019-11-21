@@ -2,6 +2,8 @@ p
   div id = "question_#{question.id}"  
     p= question.title
     = question.body
+    - if !current_user&.author_of?(question) && current_user.present?
+      = render 'shared/vote', resource: question
     = link_to 'show',  question_path(question)
     - if current_user&.author_of?(question)
         |    

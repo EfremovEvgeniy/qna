@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
+  it_behaves_like Voted do
+    let(:second_user) { create(:user) }
+    let(:votable) { create(:question) }
+  end
+
   let(:user) { create(:user) }
   let(:question) { create(:question, user: user) }
 

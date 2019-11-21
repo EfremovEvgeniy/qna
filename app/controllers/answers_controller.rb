@@ -1,5 +1,7 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, only: %i[create destroy update make_best]
+  include Voted
+
+  before_action :authenticate_user!
   helper_method :answer, :question
 
   def new; end
@@ -30,7 +32,7 @@ class AnswersController < ApplicationController
   end
 
   def question
-    @question ||= Question.with_attached_files.find(params[:question_id])
+    @question ||= params[:question_id] ?  Question.find(params[:question_id]) : answer.question
   end
 
   def answer_params

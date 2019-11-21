@@ -1,0 +1,9 @@
+.vote
+  b Vote
+  p
+    = button_to  'up', polymorphic_url([:vote_up, resource]), 
+                       method: :post, remote: true, data: { type: :json }
+  p  
+    = button_to  'down', polymorphic_url([:vote_down, resource]),
+                         method: :post, remote: true, data: { type: :json }
+.votes

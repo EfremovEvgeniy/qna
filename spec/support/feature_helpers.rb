@@ -5,4 +5,11 @@ module FeatureHelpers
     fill_in 'Password', with: user.password
     click_on 'Log in'
   end
+
+  def in_browser(name)
+    old_session = Capybara.session_name
+    Capybara.session_name = name
+    yield
+    Capybara.session_name = old_session
+  end
 end

@@ -1,6 +1,8 @@
 p
-  div id = "answer_#{answer.id}" class="answer" 
+  div id = "answer_#{answer.id}" class="answer"
     = answer.body
+    - if !current_user&.author_of?(question) && current_user.present?
+      = render 'shared/vote', resource: answer
     = render 'shared/attached_files', resource: answer
 
     .links
