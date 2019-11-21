@@ -3,8 +3,16 @@ require 'rails_helper'
 RSpec.describe Question, type: :model do
   include_examples 'links associations'
 
+  it_behaves_like Votable do
+    let(:user) { create(:user) }
+    let(:second_user) { create(:user) }
+    let(:third_user) { create(:user) }
+    let(:votable) { create(:question, user: user) }
+  end
+
   it { should have_many(:answers).dependent(:destroy) }
   it { should have_one(:trophy).dependent(:destroy) }
+  it { should have_many(:votes).dependent(:destroy) }
   it { should belong_to(:user) }
 
   it { should validate_presence_of :title }

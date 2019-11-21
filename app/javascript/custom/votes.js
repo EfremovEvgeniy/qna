@@ -4,6 +4,6 @@ $(document).on('turbolinks:load',function(){
     var resourceClass = e.detail[0]['resource_class'];
     var resourceId = e.detail[0]['resource'];
     var resourceVotes = e.detail[0]['votes'];
-    $('#' + resourceClass + '_' + resourceId + ' .votes').append("Total Votes: " + resourceVotes);
+    $('#' + resourceClass + '_' + resourceId + ' .votes').append("Total votes:" + resourceVotes);
   });
 });
