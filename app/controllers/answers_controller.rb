@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
   include Voted
 
-  before_action :authenticate_user!, only: %i[create destroy update make_best]
+  before_action :authenticate_user!
   helper_method :answer, :question
 
   def new; end

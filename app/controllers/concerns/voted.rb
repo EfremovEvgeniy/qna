@@ -2,21 +2,20 @@ module Voted
   extend ActiveSupport::Concern
 
   included do
-    before_action :authenticate_user!
     before_action :resource, only: %i[vote_up vote_down]
   end
 
   def vote_up
     return head 403 if current_user&.author_of?(@resource)
 
-    @resource.upvote(current_user)
+    @resource.upvote!(current_user)
     render_json(@resource)
   end
 
   def vote_down
     return head 403 if current_user&.author_of?(@resource)
 
-    @resource.downvote(current_user)
+    @resource.downvote!(current_user)
     render_json(@resource)
   end
 

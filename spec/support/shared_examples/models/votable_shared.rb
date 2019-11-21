@@ -14,45 +14,45 @@ shared_examples_for Votable do
       end
     end
 
-    describe '#upvote' do
+    describe '#upvote!' do
       it 'user votes up one time' do
-        votable.upvote(second_user)
+        votable.upvote!(second_user)
 
         expect(votable.total_votes).to eq 1
 
-        votable.upvote(second_user)
+        votable.upvote!(second_user)
 
         expect(votable.total_votes).to eq 1
       end
 
       it 'user changes his vote' do
-        votable.upvote(second_user)
+        votable.upvote!(second_user)
 
         expect(votable.total_votes).to eq 1
 
-        votable.downvote(second_user)
+        votable.downvote!(second_user)
 
         expect(votable.total_votes).to eq(-1)
       end
     end
 
-    describe '#downvote' do
+    describe '#downvote!' do
       it 'user votes down one time' do
-        votable.downvote(second_user)
+        votable.downvote!(second_user)
 
         expect(votable.total_votes).to eq(-1)
 
-        votable.downvote(second_user)
+        votable.downvote!(second_user)
 
         expect(votable.total_votes).to eq(-1)
       end
 
       it 'user changes his vote' do
-        votable.downvote(second_user)
+        votable.downvote!(second_user)
 
         expect(votable.total_votes).to eq(-1)
 
-        votable.upvote(second_user)
+        votable.upvote!(second_user)
 
         expect(votable.total_votes).to eq 1
       end
