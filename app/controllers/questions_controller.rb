@@ -3,7 +3,7 @@ class QuestionsController < ApplicationController
 
   before_action :authenticate_user!, except: %i[index show]
   helper_method :question
-  after_action :publish_question, only: :create 
+  after_action :publish_question, only: :create
 
   def index
     @questions = Question.all
@@ -43,13 +43,14 @@ class QuestionsController < ApplicationController
 
   def publish_question
     return if @question.errors.any?
+
     ActionCable.server.broadcast(
       'questions_channel',
       ApplicationController.render(
         partial: 'questions/simple_question',
         locals: { question: @question }
-        )
       )
+    )
   end
 
   def question
