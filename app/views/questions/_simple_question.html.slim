@@ -1,0 +1,4 @@
+div id = "question_#{question.id}"  
+    p= question.title
+    = question.body
+    = link_to 'show',  question_path(question)
