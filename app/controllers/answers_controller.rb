@@ -2,6 +2,8 @@ class AnswersController < ApplicationController
   include Voted
 
   before_action :authenticate_user!
+  after_action :publish_answer, only: :create
+
   helper_method :answer, :question
 
   def new; end
@@ -10,6 +12,7 @@ class AnswersController < ApplicationController
     @answer = question.answers.build(answer_params)
     @answer.user = current_user
     @answer.save
+    gon.answer = @answer.id
   end
 
   def destroy
@@ -26,6 +29,16 @@ class AnswersController < ApplicationController
   end
 
   private
+
+  def publish_answer
+    return if @answer.errors.any?
+
+    ActionCable.server.broadcast "questions/#{@answer.question_id}/answers", 
+    ApplicationController.render(
+                                   partial: 'answers/answer.json',
+                                   locals: { answer: @answer }
+                                 )
+  end
 
   def answer
     @answer ||= params[:id] ? Answer.with_attached_files.find(params[:id]) : Answer.new

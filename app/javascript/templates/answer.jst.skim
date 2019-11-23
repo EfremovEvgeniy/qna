@@ -1,0 +1,28 @@
+p
+  div id = "answer_#{answer.id}"  
+    = answer.body
+
+    -if answer.links.length > 0
+      p
+        b Links
+      -for link in answer.links
+          div id = "link_#{link.id}"
+            p 
+              a href=link.url #{link.name}
+
+    -if answer.files.length > 0
+      p
+        b Files
+      -for file in answer.files
+          div id="file_#{file.id}"
+            p
+              a href=file.file_url #{file.file_name}
+
+    -if gon.user_id && answer.user_id != gon.user_id
+      div class = 'vote'
+        p
+          b Vote
+        p 
+          a data-remote="true" id="vote_up" data-method="post" data-type="json" href="/answers/#{answer.id}/vote_up" up
+        p 
+          a data-remote="true" id="vote_down" data-method="post" data-type="json" href="/answers/#{answer.id}/vote_down" down

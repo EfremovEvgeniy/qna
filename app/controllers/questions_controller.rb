@@ -12,6 +12,7 @@ class QuestionsController < ApplicationController
   def show
     @answer = Answer.new
     @answer.links.build
+    gon.question_id = question.id
   end
 
   def new
