@@ -10,6 +10,6 @@ consumer.subscriptions.create("QuestionsChannel", {
   },
 
   received(data) {
-    $('.questions').append(data);
-  }
+      $('.questions').append(data);
+    }
 });
