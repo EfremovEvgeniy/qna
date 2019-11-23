@@ -18,7 +18,7 @@ feature 'User can see in real time appearance of new questions', "
       end
     end
 
-    scenario 'question appears on another user page' do
+    scenario 'appears on another user page' do
       in_browser(:one) do
         click_on 'Ask question'
         fill_in 'Title', with: 'Test question'
@@ -33,7 +33,7 @@ feature 'User can see in real time appearance of new questions', "
       end
     end
 
-    scenario 'question with errors does not appear on another user page' do
+    scenario 'with errors does not appear on another user page' do
       in_browser(:one) do
         click_on 'Ask question'
         fill_in 'Title', with: 'Test question'
