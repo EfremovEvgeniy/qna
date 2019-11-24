@@ -15,7 +15,6 @@ require("custom/gist.js")
 require("custom/votes.js")
 require("templates/answer.jst.skim")
 
-
 import 'cocoon-js';
 
 // Uncomment to copy all static images under ../images to the output folder and reference

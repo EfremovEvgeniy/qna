@@ -18,7 +18,7 @@ consumer.subscriptions.create("AnswersChannel", {
   received(data) {
     var answer = JSON.parse(data)
     if (gon.user_id !== answer.user_id) {
-      $('.answers').append(JST['templates/answer'](answer))
+      $('.answers').append(JST['templates/answer']({answer: answer}))
     }
   }
 });
