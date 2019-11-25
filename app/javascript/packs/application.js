@@ -13,7 +13,7 @@ require("custom/questions.js")
 require("custom/direct_uploads.js")
 require("custom/gist.js")
 require("custom/votes.js")
-require("templates/answer.jst.skim")
+require("custom/comment.js")
 
 import 'cocoon-js';
 

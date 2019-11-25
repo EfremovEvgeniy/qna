@@ -12,7 +12,6 @@ class AnswersController < ApplicationController
     @answer = question.answers.build(answer_params)
     @answer.user = current_user
     @answer.save
-    gon.answer = @answer.id
   end
 
   def destroy

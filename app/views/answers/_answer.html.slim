@@ -1,6 +1,9 @@
 p
   div id = "answer_#{answer.id}" class="answer"
     = answer.body
+    div id = "comments_answer_#{answer.id}"
+      = render answer.comments
+      = render 'comments/form', commentable: answer
     - if !current_user&.author_of?(question) && current_user.present?
       = render 'shared/vote', resource: answer
     = render 'shared/attached_files', resource: answer

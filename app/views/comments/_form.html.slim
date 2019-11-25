@@ -1,0 +1,11 @@
+div class = "#{commentable.class.name.downcase}-#{commentable.id}-comment-errors"
+  = render 'shared/errors', resource: commentable
+
+= form_with model: [commentable, Comment.new], class: 'hidden',  html: { id: "#{commentable.class.name.downcase}-#{commentable.id}-comment" }, remote: true do |f|
+  p
+    = f.label :body
+    = f.text_area :body
+  p
+    = f.submit 'create comment'
+
+p = link_to  "Add comment to that #{commentable.class.name.downcase}", '#', class: 'create-comment-link', data: { commentable_id: commentable.id, commentable_type: "#{commentable.class.name.downcase}"}

@@ -22,7 +22,7 @@ feature 'User can give vote to answer', "
 
         expect(page).to have_content 'Total votes:1'
 
-        in_browser(:two) do
+        in_browser(:one) do
           sign_in third_user
           visit question_path(question)
           click_on 'up'
@@ -36,7 +36,7 @@ feature 'User can give vote to answer', "
 
         expect(page).to have_content 'Total votes:-1'
 
-        in_browser(:two) do
+        in_browser(:one) do
           sign_in third_user
           visit question_path(question)
           click_on 'up'
@@ -50,7 +50,7 @@ feature 'User can give vote to answer', "
 
         expect(page).to have_content 'Total votes:-1'
 
-        in_browser(:two) do
+        in_browser(:one) do
           sign_in third_user
           visit question_path(question)
           click_on 'down'
