@@ -9,3 +9,4 @@ div class = "#{commentable.class.name.downcase}-#{commentable.id}-comment-errors
     = f.submit 'create comment'
 - if current_user.present?
   p = link_to  "Add comment to that #{commentable.class.name.downcase}", '#', class: 'create-comment-link', data: { commentable_id: commentable.id, commentable_type: "#{commentable.class.name.downcase}"}
+  

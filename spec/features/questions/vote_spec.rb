@@ -11,17 +11,16 @@ feature 'User can give vote to question', "
 
   describe 'Authenticated user', js: true do
     describe 'vote' do
-      background do
-        sign_in second_user
-        visit questions_path
-      end
-
       scenario 'up and up' do
-        click_on 'up'
+        Capybara.using_session('user') do
+          sign_in second_user
+          visit questions_path
+          click_on 'up'
 
-        expect(page).to have_content 'Total votes:1'
+          expect(page).to have_content 'Total votes:1'
+        end
 
-        in_browser(:two) do
+        Capybara.using_session('guest') do
           sign_in third_user
           visit questions_path
           click_on 'up'
@@ -31,11 +30,15 @@ feature 'User can give vote to question', "
       end
 
       scenario 'down and up' do
-        click_on 'down'
+        Capybara.using_session('user') do
+          sign_in second_user
+          visit questions_path
+          click_on 'down'
 
-        expect(page).to have_content 'Total votes:-1'
+          expect(page).to have_content 'Total votes:-1'
+        end
 
-        in_browser(:two) do
+        Capybara.using_session('guest') do
           sign_in third_user
           visit questions_path
           click_on 'up'
@@ -45,11 +48,15 @@ feature 'User can give vote to question', "
       end
 
       scenario 'down and down' do
-        click_on 'down'
+        Capybara.using_session('user') do
+          sign_in second_user
+          visit questions_path
+          click_on 'down'
 
-        expect(page).to have_content 'Total votes:-1'
+          expect(page).to have_content 'Total votes:-1'
+        end
 
-        in_browser(:two) do
+        Capybara.using_session('guest') do
           sign_in third_user
           visit questions_path
           click_on 'down'
@@ -59,6 +66,8 @@ feature 'User can give vote to question', "
       end
 
       scenario 'can give only one vote' do
+        sign_in second_user
+        visit questions_path
         click_on 'up'
 
         expect(page).to have_content 'Total votes:1'
