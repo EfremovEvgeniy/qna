@@ -23,14 +23,10 @@ consumer.subscriptions.create("CommentsChannel", {
     var commentableId = comment.commentable_id
     var commentableType = comment.commentable_type
 
-    // if (commentableType === 'question') {
-    //   $('#comments_question_' + commentableId).append(JST['templates/comment']({
-    //     comment: comment
-    //   }));
-    // } else if (commentableType === 'answer') {
-    //   $('#comments_answer_' + commentableId).append(JST['templates/comment']({
-    //     comment: comment
-    //   }));
-    // }
+    if (commentableType === 'question') {
+      $('#comments_question_' + commentableId).append('Comment:' + comment.body)
+    } else if (commentableType === 'answer') {
+      $('#comments_answer_' + commentableId).append('Comment:' + comment.body)
+    }
   }
 });

@@ -37,14 +37,18 @@ feature 'User can see in real time appearance of new comments', "
     end
 
     scenario 'with errors does not appear on another user page' do
-      within "div#question_#{question.id}" do
-        click_on 'create comment'
+      Capybara.using_session('first_user') do
+        within "div#question_#{question.id}" do
+          click_on 'create comment'
 
-        expect(page).to have_content "Body can't be blank"
+          expect(page).to have_content "Body can't be blank"
+        end
       end
 
       Capybara.using_session('second_user') do
-        expect(page).to have_no_content 'my comment'
+        within "div#comments_question_#{question.id}" do
+          expect(page).to have_no_css 'comment_1'
+        end
       end
     end
   end
@@ -87,7 +91,9 @@ feature 'User can see in real time appearance of new comments', "
       end
 
       Capybara.using_session('second_user') do
-        expect(page).to have_no_content 'my comment'
+        within "div#comments_question_#{question.id}" do
+          expect(page).to have_no_css 'comment_1'
+        end
       end
     end
   end

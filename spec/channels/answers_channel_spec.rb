@@ -41,9 +41,7 @@ feature 'User can see in real time appearance of new answers', "
       end
 
       Capybara.using_session('guest') do
-        within '.answers' do
-          expect(page).to have_no_css 'answer'
-        end
+        expect(page).to have_no_css 'answers'
       end
     end
   end
