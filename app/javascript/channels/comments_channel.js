@@ -20,13 +20,10 @@ consumer.subscriptions.create("CommentsChannel", {
       return;
     }
 
-    var commentableId = comment.commentable_id
-    var commentableType = comment.commentable_type
-
-    if (commentableType === 'question') {
-      $('#comments_question_' + commentableId).append('Comment:' + comment.body)
-    } else if (commentableType === 'answer') {
-      $('#comments_answer_' + commentableId).append('Comment:' + comment.body)
+    if (comment.commentable_type === 'question') {
+      $('#comments_question_' + comment.commentable_id).append('Comment:' + comment.body)
+    } else if (comment.commentable_type === 'answer') {
+      $('#comments_answer_' + comment.commentable_id).append('Comment:' + comment.body)
     }
   }
 });

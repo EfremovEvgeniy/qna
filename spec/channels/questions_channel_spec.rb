@@ -29,6 +29,7 @@ feature 'User can see in real time appearance of new questions', "
       end
 
       Capybara.using_session('guest') do
+        expect(page).to have_selector('div', id: "question_#{user.questions.first.id}")
         expect(page).to have_content 'Test question'
       end
     end
@@ -44,7 +45,7 @@ feature 'User can see in real time appearance of new questions', "
       end
 
       Capybara.using_session('guest') do
-        expect(page).to have_no_content 'Test question'
+        expect(page).to have_no_css '.questions'
       end
     end
   end
