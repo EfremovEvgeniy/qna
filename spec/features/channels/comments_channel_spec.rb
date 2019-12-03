@@ -32,6 +32,7 @@ feature 'User can see in real time appearance of new comments', "
       end
 
       Capybara.using_session('second_user') do
+        expect(page).to have_selector('div', id: "comment_#{question.comments.first.id}")
         expect(page).to have_content 'my comment'
       end
     end
@@ -47,7 +48,7 @@ feature 'User can see in real time appearance of new comments', "
 
       Capybara.using_session('second_user') do
         within "div#comments_question_#{question.id}" do
-          expect(page).to have_no_css 'comment_1'
+          expect(page).to have_no_selector('div', id: /comment_*/)
         end
       end
     end
@@ -77,6 +78,7 @@ feature 'User can see in real time appearance of new comments', "
       end
 
       Capybara.using_session('second_user') do
+        expect(page).to have_selector('div', id: "comment_#{answer.comments.first.id}")
         expect(page).to have_content 'my comment'
       end
     end
@@ -91,8 +93,8 @@ feature 'User can see in real time appearance of new comments', "
       end
 
       Capybara.using_session('second_user') do
-        within "div#comments_question_#{question.id}" do
-          expect(page).to have_no_css 'comment_1'
+        within "div#comments_answer_#{answer.id}" do
+          expect(page).to have_no_selector('div', id: /comment_*/)
         end
       end
     end
