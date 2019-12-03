@@ -9,7 +9,7 @@ RSpec.describe CommentsController, type: :controller do
       before { login_with(user) }
 
       context 'with valid attributes' do
-        it 'saves a create comment' do
+        it 'saves a comment' do
           expect do
             post :create, params: { commentable: 'questions',
                                     user_id: user, question_id: question.id,
