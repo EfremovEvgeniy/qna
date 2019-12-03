@@ -29,6 +29,7 @@ feature 'User can see in real time appearance of new answers', "
       end
 
       Capybara.using_session('guest') do
+        expect(page).to have_selector('div', id: "answer_#{question.answers.first.id}")
         expect(page).to have_content 'my awesome answer'
       end
     end
@@ -41,7 +42,7 @@ feature 'User can see in real time appearance of new answers', "
       end
 
       Capybara.using_session('guest') do
-        expect(page).to have_no_css 'answers'
+        expect(page).to have_no_css '.answers'
       end
     end
   end

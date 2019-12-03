@@ -1,6 +1,6 @@
 p
   div id = "answer_#{answer.id}" class="answer"
-    = answer.body
+    p= answer.body
     div id = "comments_answer_#{answer.id}"
       = render answer.comments
       = render 'comments/form', commentable: answer
