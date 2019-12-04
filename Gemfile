@@ -50,6 +50,8 @@ group :development, :test do
   gem 'rspec-rails', '~> 4.0.0.beta2'
   # gem for test data
   gem 'factory_bot_rails'
+  # gem for testing channels
+  gem 'action-cable-testing'
 end
 
 group :development do

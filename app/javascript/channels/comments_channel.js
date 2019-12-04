@@ -1,18 +1,6 @@
 import consumer from "./consumer"
 
-consumer.subscriptions.create("CommentsChannel", {
-  connected() {
-    if (gon.question_id) {
-      this.perform('follow', {
-        id: gon.question_id
-      });
-    }
-  },
-
-  disconnected() {
-    
-  },
-
+consumer.subscriptions.create({ channel:"CommentsChannel", question_id: gon.question_id }, {
   received(data) {
     var comment = JSON.parse(data)
 

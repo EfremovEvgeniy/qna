@@ -1,14 +1,6 @@
 import consumer from "./consumer"
 
 consumer.subscriptions.create("QuestionsChannel", {
-  connected() {
-    
-  },
-
-  disconnected() {
-    
-  },
-
   received(data) {
     var question = JSON.parse(data)
     if (gon.user_id !== question.user_id) {
