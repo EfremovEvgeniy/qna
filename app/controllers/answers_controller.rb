@@ -32,11 +32,10 @@ class AnswersController < ApplicationController
   def publish_answer
     return if @answer.errors.any?
 
-    ActionCable.server.broadcast "questions/#{@answer.question_id}/answers",
-                                 ApplicationController.render(
-                                   partial: 'answers/answer.json',
-                                   locals: { answer: @answer }
-                                 )
+    ActionCable.server.broadcast(
+      "questions/#{@answer.question_id}/answers",
+      @answer.to_json
+    )
   end
 
   def answer

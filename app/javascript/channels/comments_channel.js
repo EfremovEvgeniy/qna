@@ -10,10 +10,10 @@ consumer.subscriptions.create({ channel:"CommentsChannel", question_id: gon.ques
 
     var $newCommentDiv = $("<div id=" + "comment_" + comment.id + "></div>")
 
-    if (comment.commentable_type === 'question') {
+    if (comment.commentable_type === 'Question') {
       $('#comments_question_' + comment.commentable_id).append($newCommentDiv)
       $($newCommentDiv).append("<b>Comment:</b>", "<p>" + comment.body + "</p>")
-    } else if (comment.commentable_type === 'answer') {
+    } else if (comment.commentable_type === 'Answer') {
       $('#comments_answer_' + comment.commentable_id).append($newCommentDiv)
       $($newCommentDiv).append("<b>Comment:</b>", "<p>" + comment.body + "</p>")
     }

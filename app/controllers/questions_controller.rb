@@ -48,10 +48,7 @@ class QuestionsController < ApplicationController
 
     ActionCable.server.broadcast(
       'questions_channel',
-      ApplicationController.render(
-        partial: 'questions/question.json',
-        locals: { question: @question }
-      )
+      @question.to_json
     )
   end
 
