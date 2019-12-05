@@ -11,10 +11,12 @@ feature 'User can see in real time appearance of new answers', "
       Capybara.using_session('user') do
         sign_in(question.user)
         visit question_path(question)
+        expect(page).to have_no_content 'my awesome answer'
       end
 
       Capybara.using_session('guest') do
         visit question_path(question)
+        expect(page).to have_no_content 'my awesome answer'
       end
     end
 

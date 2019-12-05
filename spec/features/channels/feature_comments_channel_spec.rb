@@ -13,11 +13,13 @@ feature 'User can see in real time appearance of new comments', "
       Capybara.using_session('first_user') do
         sign_in(user)
         visit question_path(question)
+        expect(page).to have_no_content 'my comment'
         click_on 'Add comment to that question'
       end
 
       Capybara.using_session('second_user') do
         visit question_path(question)
+        expect(page).to have_no_content 'my comment'
       end
     end
 
@@ -59,11 +61,13 @@ feature 'User can see in real time appearance of new comments', "
       Capybara.using_session('first_user') do
         sign_in(user)
         visit question_path(question)
+        expect(page).to have_no_content 'my comment'
         click_on 'Add comment to that answer'
       end
 
       Capybara.using_session('second_user') do
         visit question_path(question)
+        expect(page).to have_no_content 'my comment'
       end
     end
 

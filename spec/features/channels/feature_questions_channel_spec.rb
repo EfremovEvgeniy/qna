@@ -11,10 +11,12 @@ feature 'User can see in real time appearance of new questions', "
       Capybara.using_session('user') do
         sign_in(user)
         visit questions_path
+        expect(page).to have_no_content 'Test question'
       end
 
       Capybara.using_session('guest') do
         visit questions_path
+        expect(page).to have_no_content 'Test question'
       end
     end
 

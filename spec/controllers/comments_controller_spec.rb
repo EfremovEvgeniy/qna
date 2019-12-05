@@ -31,7 +31,7 @@ RSpec.describe CommentsController, type: :controller do
                                   user_id: user, question_id: question.id,
                                   comment: attributes_for(:comment), format: :js }
 
-          expect(assigns(:comment).user.id).to eq user.id
+          expect(assigns(:comment).user).to eq user
         end
 
         it 'broadcasts to comment channel' do
@@ -52,6 +52,23 @@ RSpec.describe CommentsController, type: :controller do
                                     format: :js }
           end .to_not change(question.comments, :count)
         end
+
+        it 'renders create template' do
+          post :create, params: { commentable: 'questions',
+                                  user_id: user, question_id: question.id,
+                                  comment: attributes_for(:comment, :invalid_comment),
+                                  format: :js }
+          expect(response).to render_template :create
+        end
+
+        it 'does not broadcast to comment channel' do
+          expect do
+            post :create, params: { commentable: 'questions',
+                                    user_id: user, question_id: question.id,
+                                    comment: attributes_for(:comment, :invalid_comment),
+                                    format: :js }
+          end .to_not have_broadcasted_to("questions/#{question.id}/comments")
+        end
       end
     end
 
@@ -71,6 +88,14 @@ RSpec.describe CommentsController, type: :controller do
                                 comment: attributes_for(:comment), format: :js }
 
         expect(response).to have_http_status 401
+      end
+
+      it 'does not broadcast to comment channel' do
+        expect do
+          post :create, params: { commentable: 'questions',
+                                  user_id: user, question_id: question.id,
+                                  comment: attributes_for(:comment), format: :js }
+        end .to_not have_broadcasted_to("questions/#{question.id}/comments")
       end
     end
   end
@@ -101,7 +126,7 @@ RSpec.describe CommentsController, type: :controller do
                                   user_id: user, answer_id: answer.id,
                                   comment: attributes_for(:comment), format: :js }
 
-          expect(assigns(:comment).user.id).to eq user.id
+          expect(assigns(:comment).user).to eq user
         end
 
         it 'broadcasts to comment channel' do
@@ -122,6 +147,23 @@ RSpec.describe CommentsController, type: :controller do
                                     format: :js }
           end .to_not change(answer.comments, :count)
         end
+
+        it 'renders create template' do
+          post :create, params: { commentable: 'answers',
+                                  user_id: user, answer_id: answer.id,
+                                  comment: attributes_for(:comment, :invalid_comment),
+                                  format: :js }
+          expect(response).to render_template :create
+        end
+
+        it 'does not broadcast to comment channel' do
+          expect do
+            post :create, params: { commentable: 'answers',
+                                    user_id: user, answer_id: answer.id,
+                                    comment: attributes_for(:comment, :invalid_comment),
+                                    format: :js }
+          end .to_not have_broadcasted_to("questions/#{answer.question.id}/comments")
+        end
       end
     end
 
@@ -141,6 +183,14 @@ RSpec.describe CommentsController, type: :controller do
                                 comment: attributes_for(:comment), format: :js }
 
         expect(response).to have_http_status 401
+      end
+
+      it 'does not broadcast to comment channel' do
+        expect do
+          post :create, params: { commentable: 'answers',
+                                  user_id: user, answer_id: answer.id,
+                                  comment: attributes_for(:comment), format: :js }
+        end .to_not have_broadcasted_to("questions/#{answer.question.id}/comments")
       end
     end
   end
