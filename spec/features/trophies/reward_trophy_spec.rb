@@ -17,8 +17,12 @@ feature 'When user choose best answer his reward answers author', "
     end
 
     scenario 'choose best answer and reward author' do
-      click_on 'Best answer'
-      in_browser(:two) do
+      Capybara.using_session('author') do
+        sign_in(question.user)
+        visit question_path(question)
+        click_on 'Best answer'
+      end
+      Capybara.using_session('user') do
         sign_in(second_user)
         click_on 'My trophies'
 

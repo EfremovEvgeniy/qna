@@ -1,0 +1,5 @@
+$(".<%= @comment.commentable.class.name.downcase %>-<%= @commentable.id %>-comment-errors").html('<%= render 'shared/errors', resource: @comment %>');
+
+<% if @comment.errors.blank? %>
+  $('#comments_<%= "#{@commentable.class.name.downcase}"%>_<%= @commentable.id %>').html('<%= j render @commentable.comments %>');
+<% end %>

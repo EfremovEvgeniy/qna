@@ -3,6 +3,7 @@ class QuestionsController < ApplicationController
 
   before_action :authenticate_user!, except: %i[index show]
   helper_method :question
+  after_action :publish_question, only: :create
 
   def index
     @questions = Question.all
@@ -11,6 +12,7 @@ class QuestionsController < ApplicationController
   def show
     @answer = Answer.new
     @answer.links.build
+    gon.question_id = question.id
   end
 
   def new
@@ -23,6 +25,7 @@ class QuestionsController < ApplicationController
   def create
     @question = current_user.questions.build(question_params)
     if @question.save
+      gon.question_id = @question.id
       redirect_to questions_path, notice: 'Your question successfully created.'
     else
       render :new
@@ -39,6 +42,15 @@ class QuestionsController < ApplicationController
   end
 
   private
+
+  def publish_question
+    return if @question.errors.any?
+
+    ActionCable.server.broadcast(
+      'questions_channel',
+      @question.to_json
+    )
+  end
 
   def question
     @question ||= params[:id] ? Question.with_attached_files.find(params[:id]) : Question.new

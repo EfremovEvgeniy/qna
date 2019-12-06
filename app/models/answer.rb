@@ -1,5 +1,6 @@
 class Answer < ApplicationRecord
   include HasLinks
+  include HasComments
   include Votable
 
   belongs_to :question

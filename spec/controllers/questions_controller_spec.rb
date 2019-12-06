@@ -140,6 +140,18 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
+    context 'with broadcasting' do
+      before { login_with(user) }
+
+      it 'broadcasts to question channel' do
+        expect do
+          post :create, params: {
+            question: attributes_for(:question)
+          }
+        end .to have_broadcasted_to('questions_channel')
+      end
+    end
+
     context 'for unauthenticated user' do
       it 'does not create question' do
         expect do

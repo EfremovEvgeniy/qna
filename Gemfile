@@ -25,6 +25,9 @@ gem 'jbuilder', '~> 2.7'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
+# gem for push data from controllers to js files
+gem 'gon'
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
 # Gem for slim templates
@@ -47,6 +50,8 @@ group :development, :test do
   gem 'rspec-rails', '~> 4.0.0.beta2'
   # gem for test data
   gem 'factory_bot_rails'
+  # gem for testing channels
+  gem 'action-cable-testing'
 end
 
 group :development do
