@@ -37,6 +37,9 @@ gem 'devise'
 
 gem 'jquery-rails'
 
+gem 'omniauth'
+gem 'omniauth-github'
+
 # gem for amazon
 gem 'aws-sdk', '~> 3.0', '>= 3.0.1'
 
