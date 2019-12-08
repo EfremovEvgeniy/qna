@@ -10,7 +10,7 @@ class FindForOauth
     return authorization.user if authorization
 
     email = auth.info[:email]
-    user = User.where(email: email).first
+    user = User.find_by(email: email)
     if user
     else
       password = Devise.friendly_token[0, 20]
