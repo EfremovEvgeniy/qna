@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,
+         :recoverable, :rememberable, :validatable, :confirmable,
          :omniauthable, omniauth_providers: %i[github vkontakte]
 
   has_many :questions, dependent: :destroy
@@ -12,6 +12,15 @@ class User < ApplicationRecord
 
   def self.find_for_oauth(auth, email)
     FindForOauth.new(auth, email).call
+  end
+
+  def self.find_or_create(email)
+    return if User.find_by(email: email)
+
+    password = Devise.friendly_token[0, 20]
+    user = User.new(email: email, password: password, password_confirmation: password)
+    user.save!
+    user
   end
 
   def author_of?(resource)

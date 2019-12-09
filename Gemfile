@@ -55,6 +55,8 @@ group :development, :test do
   gem 'factory_bot_rails'
   # gem for testing channels
   gem 'action-cable-testing'
+
+  gem 'letter_opener', '~> 1.7'
 end
 
 group :development do
@@ -76,6 +78,8 @@ group :test do
   gem 'webdrivers'
   # gem for save_and_open_page
   gem 'launchy'
+
+  gem 'capybara-email', '~> 3.0', '>= 3.0.1'
 end
 
 gem 'dotenv-rails', groups: %i[development test]

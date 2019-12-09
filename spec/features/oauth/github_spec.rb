@@ -14,7 +14,7 @@ feature 'User can sign in with github', "
     end
 
     it 'logins user with github' do
-      mock_auth :github, 'user@mail.ru'
+      mock_auth :github, user.email
       click_on 'Sign in with GitHub'
 
       expect(page).to have_content 'Successfully authenticated from Github account.'
