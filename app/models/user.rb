@@ -10,8 +10,8 @@ class User < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :authorizations, dependent: :destroy
 
-  def self.find_for_oauth(auth)
-    FindForOauth.new(auth).call
+  def self.find_for_oauth(auth, email)
+    FindForOauth.new(auth, email).call
   end
 
   def author_of?(resource)
