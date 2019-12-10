@@ -16,9 +16,9 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
     session[:email] = params[:email]
     user = User.find_or_create(params[:email])
     if user.confirmed?
-      redirect_to user_session_path, :notice => 'You can sign in by Vkontakte'
+      redirect_to user_session_path, notice: 'You can sign in by Vkontakte'
     else
-      redirect_to user_session_path, :notice => "We send you email on #{user.email} for confirmation "
+      redirect_to user_session_path, notice: "We send you email on #{user.email} for confirmation "
     end
   end
 
