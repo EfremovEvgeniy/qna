@@ -5,7 +5,7 @@ feature 'User can create question', "
   As an authenticated user
   I'd like to be able to ask the question
 " do
-  given!(:user) { create(:user) }
+  given(:user) { create(:user) }
 
   describe 'Authenticated user' do
     background do

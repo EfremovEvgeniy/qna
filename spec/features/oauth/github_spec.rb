@@ -9,15 +9,30 @@ feature 'User can sign in with github', "
 
     background { visit new_user_registration_path }
 
-    it 'shows links to sign in with github' do
+    scenario 'shows links to sign in with github' do
       expect(page).to have_link 'Sign in with GitHub'
     end
 
-    it 'logins user with github' do
-      mock_auth :github, user.email
-      click_on 'Sign in with GitHub'
+    describe 'login with github' do
+      scenario 'existing user' do
+        mock_auth :github, user.email
+        click_on 'Sign in with GitHub'
 
-      expect(page).to have_content 'Successfully authenticated from Github account.'
+        expect(page).to have_content 'Successfully authenticated from Github account.'
+      end
+
+      scenario 'does not existing user' do
+        mock_auth :github, 'new@gmail.com'
+        click_on 'Sign in with GitHub'
+        open_email 'new@gmail.com'
+        current_email.click_link 'Confirm my account'
+
+        expect(page).to have_content 'Your email address has been successfully confirmed'
+
+        click_on 'Sign in with GitHub'
+
+        expect(page).to have_content 'Successfully authenticated from Github account.'
+      end
     end
   end
 end
