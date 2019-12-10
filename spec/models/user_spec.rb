@@ -63,6 +63,17 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '.find_by_auth' do
+    let!(:user) { create(:user) }
+    let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456') }
+
+    it 'returns the user' do
+      user.authorizations.create(provider: 'facebook', uid: '123456')
+
+      expect(User.find_by_auth(auth)).to eq user
+    end
+  end
+
   describe '#author_of?(resource)' do
     let(:first_user) { create(:user) }
     let(:second_user) { create(:user) }

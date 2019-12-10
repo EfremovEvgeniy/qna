@@ -6,17 +6,20 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def vkontakte
-    return render 'shared/email' unless session[:email]
-
-    email = session[:email]
+    email = User.find_by_auth(@auth)&.email || session[:email]
+    return render 'shared/email' unless email
 
     sing_in_provider(@auth, email)
   end
 
   def fill_email
     session[:email] = params[:email]
-    User.find_or_create(params[:email])
-    redirect_to user_session_path
+    user = User.find_or_create(params[:email])
+    if user.confirmed?
+      redirect_to user_session_path, :notice => 'You can sign in by Vkontakte'
+    else
+      redirect_to user_session_path, :notice => "We send you email on #{user.email} for confirmation "
+    end
   end
 
   private

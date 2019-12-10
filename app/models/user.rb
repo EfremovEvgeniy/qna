@@ -11,15 +11,17 @@ class User < ApplicationRecord
   has_many :authorizations, dependent: :destroy
 
   def self.find_for_oauth(auth, email)
-    user = find_user(email)
-
-    authorization = Authorization.where(provider: auth.provider, uid: auth.uid.to_s).first
-    return authorization.user if authorization
+    user = find_user(email) || find_by_auth(auth)
 
     user ||= create_user(email)
     user.create_authorization(auth)
 
     user
+  end
+
+  def self.find_by_auth(auth)
+    authorization = Authorization.where(provider: auth.provider, uid: auth.uid.to_s).first
+    return authorization.user if authorization
   end
 
   def self.find_or_create(email)
