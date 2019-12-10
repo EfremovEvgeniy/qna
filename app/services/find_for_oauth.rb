@@ -7,10 +7,11 @@ class FindForOauth
   end
 
   def call
+    user = User.find_by(email: @email)
+
     authorization = Authorization.where(provider: auth.provider, uid: auth.uid.to_s).first
     return authorization.user if authorization
 
-    user = User.find_by(email: @email)
     if user
     else
       password = Devise.friendly_token[0, 20]

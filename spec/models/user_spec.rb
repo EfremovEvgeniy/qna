@@ -22,6 +22,18 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '.find_or_create' do
+    let!(:user) { create(:user) }
+
+    it 'find need user by email' do
+      expect(User.find_or_create(user.email)).to eq user
+    end
+
+    it 'creates new user' do
+      expect { User.find_or_create('user@mail.ru') }.to change(User, :count).by(1)
+    end
+  end
+
   describe '#author_of?(resource)' do
     let(:first_user) { create(:user) }
     let(:second_user) { create(:user) }

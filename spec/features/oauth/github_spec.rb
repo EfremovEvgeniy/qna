@@ -9,10 +9,6 @@ feature 'User can sign in with github', "
 
     background { visit new_user_registration_path }
 
-    scenario 'shows links to sign in with github' do
-      expect(page).to have_link 'Sign in with GitHub'
-    end
-
     describe 'login with github' do
       scenario 'existing user' do
         mock_auth :github, user.email

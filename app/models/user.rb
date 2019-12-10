@@ -15,7 +15,9 @@ class User < ApplicationRecord
   end
 
   def self.find_or_create(email)
-    return if User.find_by(email: email)
+    if user = User.find_by(email: email)
+      return user
+    end
 
     password = Devise.friendly_token[0, 20]
     user = User.new(email: email, password: password, password_confirmation: password)

@@ -9,12 +9,8 @@ feature 'User can sign in with vkontakte', "
 
     background { visit new_user_registration_path }
 
-    scenario 'shows links to sign in with vkontakte' do
-      expect(page).to have_link 'Sign in with Vkontakte'
-    end
-
     describe 'login with vkontakte' do
-      scenario 'existed user' do
+      scenario 'existing user' do
         mock_auth :vkontakte
         click_on 'Sign in with Vkontakte'
 
@@ -26,7 +22,7 @@ feature 'User can sign in with vkontakte', "
         expect(page).to have_content 'Successfully authenticated from Vkontakte account.'
       end
 
-      scenario 'user does not exist' do
+      scenario 'does not existing user' do
         mock_auth :vkontakte
         click_on 'Sign in with Vkontakte'
         fill_in 'Email', with: 'new@gmail.com'
