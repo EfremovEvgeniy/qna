@@ -65,20 +65,33 @@ RSpec.describe OauthCallbacksController, type: :controller do
 
     context 'user exists' do
       before do
-        allow(User).to receive(:find_for_oauth).and_return(user)
         get :vkontakte
       end
 
-      it 'redirects to email' do
+      it 'redirects to enter email page' do
         expect(response).to render_template 'shared/email'
       end
 
-      it 'login user' do
-        expect(subject.current_user).to eq user
-      end
+      context 'logins user' do
+        before do
+          post :fill_email, params: {
+            email: user.email
+          }
+        end
 
-      it 'redirects to root path' do
-        expect(response).to redirect_to root_path
+        it 'sets user email in session' do
+          expect(session[:email]).to eq user.email
+        end
+
+        it 'login user' do
+          get :vkontakte
+          expect(subject.current_user).to eq user
+        end
+
+        it 'redirects to root path' do
+          get :vkontakte
+          expect(response).to redirect_to root_path
+        end
       end
     end
 

@@ -11,14 +11,28 @@ class User < ApplicationRecord
   has_many :authorizations, dependent: :destroy
 
   def self.find_for_oauth(auth, email)
-    FindForOauth.new(auth, email).call
+    user = find_user(email)
+
+    authorization = Authorization.where(provider: auth.provider, uid: auth.uid.to_s).first
+    return authorization.user if authorization
+
+    user ||= create_user(email)
+    user.create_authorization(auth)
+
+    user
   end
 
   def self.find_or_create(email)
-    if user = User.find_by(email: email)
-      return user
-    end
+    return find_user(email) if find_user(email)
 
+    create_user(email)
+  end
+
+  def self.find_user(email)
+    User.find_by(email: email)
+  end
+
+  def self.create_user(email)
     password = Devise.friendly_token[0, 20]
     user = User.new(email: email, password: password, password_confirmation: password)
     user.save!

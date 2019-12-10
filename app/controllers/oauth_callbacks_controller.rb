@@ -1,25 +1,29 @@
 class OauthCallbacksController < Devise::OmniauthCallbacksController
+  before_action :set_auth, only: %i[github vkontakte]
+
   def github
-    auth = request.env['omniauth.auth']
-    sing_in_provider(auth, auth.info[:email])
+    sing_in_provider(@auth, @auth.info[:email])
   end
 
   def vkontakte
-    auth = request.env['omniauth.auth']
     return render 'shared/email' unless session[:email]
 
     email = session[:email]
 
-    sing_in_provider(auth, email)
+    sing_in_provider(@auth, email)
   end
 
   def fill_email
     session[:email] = params[:email]
     User.find_or_create(params[:email])
-    redirect_to user_session_path, notice: 'You have to confirm your email address before continuing'
+    redirect_to user_session_path
   end
 
   private
+
+  def set_auth
+    @auth = request.env['omniauth.auth']
+  end
 
   def sing_in_provider(auth, email)
     @user = User.find_for_oauth(auth, email)
