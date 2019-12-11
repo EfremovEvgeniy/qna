@@ -20,7 +20,7 @@ class User < ApplicationRecord
   end
 
   def self.find_by_auth(auth)
-    authorization = Authorization.where(provider: auth.provider, uid: auth.uid.to_s).first
+    authorization = Authorization.find_by provider: auth.provider, uid: auth.uid.to_s
     return authorization.user if authorization
   end
 
@@ -36,9 +36,7 @@ class User < ApplicationRecord
 
   def self.create_user(email)
     password = Devise.friendly_token[0, 20]
-    user = User.new(email: email, password: password, password_confirmation: password)
-    user.save!
-    user
+    User.create!(email: email, password: password, password_confirmation: password)
   end
 
   def author_of?(resource)
@@ -46,6 +44,6 @@ class User < ApplicationRecord
   end
 
   def create_authorization(auth)
-    authorizations.create(provider: auth.provider, uid: auth.uid) unless User.find_by_auth(auth)
+    authorizations.create!(provider: auth.provider, uid: auth.uid) unless User.find_by_auth(auth)
   end
 end

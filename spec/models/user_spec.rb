@@ -11,12 +11,18 @@ RSpec.describe User, type: :model do
   it { should validate_presence_of :password }
 
   describe '.find_for_ouath' do
-    describe 'Such User alredy ' do
+    describe 'user already exist' do
       let!(:user) { create(:user) }
       let(:email) { user.email }
       let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456') }
 
-      context 'user already has authorization' do
+      context 'user exist by email' do
+        it 'returns user by email' do
+          expect(User.find_for_oauth(auth, email)).to eq user
+        end
+      end
+
+      context 'user has authorization' do
         it 'returns the user' do
           user.authorizations.create(provider: 'facebook', uid: '123456')
 
@@ -36,17 +42,26 @@ RSpec.describe User, type: :model do
             expect { User.find_for_oauth(auth, email) }.to change(user.authorizations, :count).by(1)
           end
 
-          it 'creates authorization with provider and uid' do
-            authorization = User.find_for_oauth(auth, email).authorizations.first
-
-            expect(authorization.provider).to eq auth.provider
-            expect(authorization.uid).to eq auth.uid
-          end
-
           it 'returns the user' do
             expect(User.find_for_oauth(auth, email)).to eq user
           end
         end
+      end
+    end
+
+    describe 'user does not exist' do
+      let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456') }
+      it 'creates new user' do
+        expect { User.find_for_oauth(auth, 'user@mail.ru') }.to change(User, :count).by(1)
+      end
+
+      it 'create authorization for new user' do
+        expect { User.find_for_oauth(auth, 'user@mail.ru') }.to change(Authorization, :count).by(1)
+        expect(Authorization.last.user.email).to eq 'user@mail.ru'
+      end
+
+      it 'returns new user' do
+        expect(User.find_for_oauth(auth, 'user@mail.ru')).to eq User.find_by(email: 'user@mail.ru')
       end
     end
   end
