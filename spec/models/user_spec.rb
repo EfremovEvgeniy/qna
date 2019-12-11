@@ -10,59 +10,15 @@ RSpec.describe User, type: :model do
   it { should validate_presence_of :email }
   it { should validate_presence_of :password }
 
-  describe '.find_for_ouath' do
-    describe 'user already exist' do
-      let!(:user) { create(:user) }
-      let(:email) { user.email }
-      let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456') }
+  describe '.find_for_oauth' do
+    let!(:user) { create(:user) }
+    let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123') }
+    let(:service) { double('FindForOauth') }
 
-      context 'user exist by email' do
-        it 'returns user by email' do
-          expect(User.find_for_oauth(auth, email)).to eq user
-        end
-      end
-
-      context 'user has authorization' do
-        it 'returns the user' do
-          user.authorizations.create(provider: 'facebook', uid: '123456')
-
-          expect(User.find_for_oauth(auth, email)).to eq user
-        end
-      end
-
-      context 'user has not authorization' do
-        context 'user already exists' do
-          let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456', info: { email: email }) }
-
-          it 'does not create new user' do
-            expect { User.find_for_oauth(auth, email) }.to_not change(User, :count)
-          end
-
-          it 'create authorization for user' do
-            expect { User.find_for_oauth(auth, email) }.to change(user.authorizations, :count).by(1)
-          end
-
-          it 'returns the user' do
-            expect(User.find_for_oauth(auth, email)).to eq user
-          end
-        end
-      end
-    end
-
-    describe 'user does not exist' do
-      let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456') }
-      it 'creates new user' do
-        expect { User.find_for_oauth(auth, 'user@mail.ru') }.to change(User, :count).by(1)
-      end
-
-      it 'create authorization for new user' do
-        expect { User.find_for_oauth(auth, 'user@mail.ru') }.to change(Authorization, :count).by(1)
-        expect(Authorization.last.user.email).to eq 'user@mail.ru'
-      end
-
-      it 'returns new user' do
-        expect(User.find_for_oauth(auth, 'user@mail.ru')).to eq User.find_by(email: 'user@mail.ru')
-      end
+    it 'calls FindForOauth' do
+      expect(FindForOauth).to receive(:new).with(auth, user.email).and_return(service)
+      expect(service).to receive(:call)
+      User.find_for_oauth(auth, user.email)
     end
   end
 

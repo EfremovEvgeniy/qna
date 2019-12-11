@@ -11,12 +11,7 @@ class User < ApplicationRecord
   has_many :authorizations, dependent: :destroy
 
   def self.find_for_oauth(auth, email)
-    user = find_user(email) || find_by_auth(auth)
-
-    user ||= create_user(email)
-    user.create_authorization(auth)
-
-    user
+    FindForOauth.new(auth, email).call
   end
 
   def self.find_by_auth(auth)
@@ -25,13 +20,9 @@ class User < ApplicationRecord
   end
 
   def self.find_or_create(email)
-    return find_user(email) if find_user(email)
+    return User.find_by(email: email) if User.find_by(email: email)
 
     create_user(email)
-  end
-
-  def self.find_user(email)
-    User.find_by(email: email)
   end
 
   def self.create_user(email)
