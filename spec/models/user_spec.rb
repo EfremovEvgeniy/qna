@@ -102,5 +102,10 @@ RSpec.describe User, type: :model do
       expect(authorization.provider).to eq auth.provider
       expect(authorization.uid).to eq auth.uid
     end
+
+    it 'does not create authorization if user already has it' do
+      user.create_authorization(auth)
+      expect { user.create_authorization(auth) }.to change(user.authorizations, :count).by(0)
+    end
   end
 end

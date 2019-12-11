@@ -46,6 +46,6 @@ class User < ApplicationRecord
   end
 
   def create_authorization(auth)
-    authorizations.create(provider: auth.provider, uid: auth.uid)
+    authorizations.create(provider: auth.provider, uid: auth.uid) unless User.find_by_auth(auth)
   end
 end
