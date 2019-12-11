@@ -2,6 +2,8 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
   before_action :set_auth, :set_email, only: %i[github vkontakte]
 
   def github
+    return render 'shared/email' unless @email
+
     sing_in_provider(@auth, @email)
   end
 
@@ -29,7 +31,7 @@ class OauthCallbacksController < Devise::OmniauthCallbacksController
 
   def confirmed_message(user)
     if user.confirmed?
-      redirect_to user_session_path, notice: 'You can sign in by Vkontakte'
+      redirect_to user_session_path, notice: 'You can sign in by provider'
     else
       redirect_to user_session_path, notice: "We send you email on #{user.email} for confirmation "
     end

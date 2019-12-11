@@ -11,14 +11,14 @@ feature 'User can sign in with github', "
 
     describe 'login with github' do
       scenario 'existing user' do
-        mock_auth :github, user.email
+        mock_auth :github, email: user.email
         click_on 'Sign in with GitHub'
 
         expect(page).to have_content 'Successfully authenticated from Github account.'
       end
 
       scenario 'does not existing user' do
-        mock_auth :github, 'new@gmail.com'
+        mock_auth :github, email: 'new@gmail.com'
         click_on 'Sign in with GitHub'
         open_email 'new@gmail.com'
         current_email.click_link 'Confirm my account'

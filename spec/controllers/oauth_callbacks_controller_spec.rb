@@ -6,7 +6,7 @@ RSpec.describe OauthCallbacksController, type: :controller do
   describe 'github' do
     before do
       @request.env['devise.mapping'] = Devise.mappings[:user]
-      @request.env['omniauth.auth'] = mock_auth :github, user.email
+      @request.env['omniauth.auth'] = mock_auth :github, email: user.email
     end
     let!(:oauth_data) do
       OmniAuth::AuthHash.new(
@@ -128,7 +128,7 @@ RSpec.describe OauthCallbacksController, type: :controller do
       end
 
       it 'show flash message' do
-        expect(flash[:notice]).to eq 'You can sign in by Vkontakte'
+        expect(flash[:notice]).to eq 'You can sign in by provider'
       end
     end
 
