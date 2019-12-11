@@ -109,4 +109,47 @@ RSpec.describe OauthCallbacksController, type: :controller do
       end
     end
   end
+
+  describe 'fill_email' do
+    before { @request.env['devise.mapping'] = Devise.mappings[:user] }
+    describe 'user exist' do
+      before do
+        post :fill_email, params: {
+          email: user.email
+        }
+      end
+
+      it 'sets user email in session' do
+        expect(session[:email]).to eq user.email
+      end
+
+      it 'redirects to user_session_path' do
+        expect(response).to redirect_to user_session_path
+      end
+
+      it 'show flash message' do
+        expect(flash[:notice]).to eq 'You can sign in by Vkontakte'
+      end
+    end
+
+    describe 'user does not exist' do
+      before do
+        post :fill_email, params: {
+          email: 'new@gmail.com'
+        }
+      end
+
+      it 'sets user email in session' do
+        expect(session[:email]).to eq 'new@gmail.com'
+      end
+
+      it 'redirects to user_session_path' do
+        expect(response).to redirect_to user_session_path
+      end
+
+      it 'show flash message' do
+        expect(flash[:notice]).to eq 'We send you email on new@gmail.com for confirmation '
+      end
+    end
+  end
 end
