@@ -11,7 +11,7 @@ class User < ApplicationRecord
   has_many :authorizations, dependent: :destroy
 
   def self.find_for_oauth(auth, email)
-    FindForOauth.new(auth, email).call
+    FindForOauthService.new(auth, email).call
   end
 
   def self.find_by_auth(auth)
@@ -20,21 +20,16 @@ class User < ApplicationRecord
   end
 
   def self.find_or_create(email)
-    return User.find_by(email: email) if User.find_by(email: email)
-
-    create_user(email)
+    user = User.find_by(email: email)
+    user || create_user_with_rand_password(email)
   end
 
-  def self.create_user(email)
+  def self.create_user_with_rand_password(email)
     password = Devise.friendly_token[0, 20]
     User.create!(email: email, password: password, password_confirmation: password)
   end
 
   def author_of?(resource)
     id == resource.user_id
-  end
-
-  def create_authorization(auth)
-    authorizations.create!(provider: auth.provider, uid: auth.uid) unless User.find_by_auth(auth)
   end
 end

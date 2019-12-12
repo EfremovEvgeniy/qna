@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe FindForOauth do
+RSpec.describe FindForOauthService do
   let!(:user) { create(:user) }
   let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456') }
 
@@ -8,7 +8,7 @@ RSpec.describe FindForOauth do
     describe 'user already exist' do
       context 'user exist by email' do
         let(:email) { user.email }
-        subject { FindForOauth.new(auth, email) }
+        subject { FindForOauthService.new(auth, email) }
 
         it 'returns user by email' do
           expect(subject.call).to eq user
@@ -16,7 +16,7 @@ RSpec.describe FindForOauth do
       end
 
       context 'user has authorization' do
-        subject { FindForOauth.new(auth, 'user@email.com') }
+        subject { FindForOauthService.new(auth, 'user@email.com') }
 
         it 'returns the user' do
           user.authorizations.create(provider: 'facebook', uid: '123456')
@@ -28,7 +28,7 @@ RSpec.describe FindForOauth do
       context 'user has not authorization' do
         context 'user already exists' do
           let(:email) { user.email }
-          subject { FindForOauth.new(auth, email) }
+          subject { FindForOauthService.new(auth, email) }
 
           it 'does not create new user' do
             expect { subject.call }.to_not change(User, :count)
@@ -46,7 +46,7 @@ RSpec.describe FindForOauth do
     end
 
     describe 'user does not exist' do
-      subject { FindForOauth.new(auth, 'user@mail.ru') }
+      subject { FindForOauthService.new(auth, 'user@mail.ru') }
 
       it 'creates new user' do
         expect { subject.call }.to change(User, :count).by(1)

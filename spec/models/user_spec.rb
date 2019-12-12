@@ -13,10 +13,10 @@ RSpec.describe User, type: :model do
   describe '.find_for_oauth' do
     let!(:user) { create(:user) }
     let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123') }
-    let(:service) { double('FindForOauth') }
+    let(:service) { double('FindForOauthService') }
 
-    it 'calls FindForOauth' do
-      expect(FindForOauth).to receive(:new).with(auth, user.email).and_return(service)
+    it 'calls FindForOauthService' do
+      expect(FindForOauthService).to receive(:new).with(auth, user.email).and_return(service)
       expect(service).to receive(:call)
       User.find_for_oauth(auth, user.email)
     end
@@ -31,6 +31,16 @@ RSpec.describe User, type: :model do
 
     it 'creates new user' do
       expect { User.find_or_create('user@mail.ru') }.to change(User, :count).by(1)
+    end
+  end
+
+  describe '.create_user_with_rand_password' do
+    it 'creates new user' do
+      expect { User.create_user_with_rand_password('user@mail.ru') }.to change(User, :count).by(1)
+    end
+
+    it 'creates user with email in arg' do
+      expect(User.create_user_with_rand_password('user@mail.ru')).to eq User.find_by(email: 'user@mail.ru')
     end
   end
 
@@ -56,27 +66,6 @@ RSpec.describe User, type: :model do
 
     it 'should deny that second_user is an author of the passed resource' do
       expect(second_user).to_not be_author_of(question)
-    end
-  end
-
-  describe '#create_authorization' do
-    let!(:user) { create(:user) }
-    let(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123') }
-
-    it 'creates new authorization for user' do
-      expect { user.create_authorization(auth) }.to change(user.authorizations, :count).by(1)
-    end
-
-    it 'checks new authorization params' do
-      authorization = user.create_authorization(auth)
-
-      expect(authorization.provider).to eq auth.provider
-      expect(authorization.uid).to eq auth.uid
-    end
-
-    it 'does not create authorization if user already has it' do
-      user.create_authorization(auth)
-      expect { user.create_authorization(auth) }.to change(user.authorizations, :count).by(0)
     end
   end
 end
