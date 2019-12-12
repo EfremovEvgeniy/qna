@@ -15,6 +15,7 @@ feature 'User can sign in', "
 
     expect(page).to have_content 'Signed in successfully.'
   end
+
   scenario 'Unregistred user tries to sign in' do
     fill_in 'Email', with: 'wrong@test.com'
     fill_in 'Password', with: 'password'

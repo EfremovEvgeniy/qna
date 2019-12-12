@@ -10,8 +10,8 @@ feature 'User can sign up', "
 
   describe 'Authenticated user' do
     background do
+      visit new_user_session_path
       sign_in(user)
-      visit root_path
     end
     scenario 'tryes to sign up' do
       expect(page).to have_no_link('Sign up')
@@ -27,7 +27,10 @@ feature 'User can sign up', "
     fill_in 'Password confirmation', with: 'password28'
     click_on 'Join QnA'
 
-    expect(page).to have_content 'Welcome! You have signed up successfully.'
+    open_email 'test@gmail.com'
+
+    current_email.click_link 'Confirm my account'
+    expect(page).to have_content 'Your email address has been successfully confirmed'
   end
 
   scenario 'Registred but unauthenticated user goes to sign up' do
