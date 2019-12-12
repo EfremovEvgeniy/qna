@@ -34,13 +34,13 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '.create_user_with_rand_password' do
+  describe '.create_user_with_rand_password!' do
     it 'creates new user' do
-      expect { User.create_user_with_rand_password('user@mail.ru') }.to change(User, :count).by(1)
+      expect { User.create_user_with_rand_password!('user@mail.ru') }.to change(User, :count).by(1)
     end
 
     it 'creates user with email in arg' do
-      expect(User.create_user_with_rand_password('user@mail.ru')).to eq User.find_by(email: 'user@mail.ru')
+      expect(User.create_user_with_rand_password!('user@mail.ru')).to eq User.find_by(email: 'user@mail.ru')
     end
   end
 
