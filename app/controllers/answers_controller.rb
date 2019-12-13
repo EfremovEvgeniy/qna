@@ -6,6 +6,8 @@ class AnswersController < ApplicationController
 
   helper_method :answer, :question
 
+  authorize_resource
+
   def new; end
 
   def create
@@ -24,6 +26,8 @@ class AnswersController < ApplicationController
   end
 
   def make_best
+    authorize! :make_best, answer
+    authorize! :make_best, answer.question
     @answer.make_best! if current_user.author_of?(answer.question)
   end
 

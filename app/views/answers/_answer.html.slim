@@ -4,14 +4,14 @@ p
     div id = "comments_answer_#{answer.id}"
       = render answer.comments
       = render 'comments/form', commentable: answer
-    - if !current_user&.author_of?(question) && current_user.present?
+    - if can? :vote_up, answer
       = render 'shared/vote', resource: answer
     = render 'shared/attached_files', resource: answer
 
     .links
       = render 'shared/attached_links', resource: answer
           
-    - if current_user&.author_of?(answer)
+    - if can? :update, answer
         |    
         = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
         |    

@@ -31,5 +31,26 @@ RSpec.describe Ability do
       it { should be_able_to :vote_down, create(:question, user_id: second_user.id) }
       it { should_not be_able_to :vote_down, create(:question, user_id: user.id) }
     end
+
+    describe 'answers' do
+      it { should_not be_able_to :manage, :all }
+
+      it { should be_able_to :create, Answer }
+
+      it { should be_able_to :update, create(:answer, user_id: user.id) }
+      it { should_not be_able_to :update, create(:answer, user_id: second_user.id) }
+
+      it { should be_able_to :destroy, create(:answer, user_id: user.id) }
+      it { should_not be_able_to :destroy, create(:answer, user_id: second_user.id) }
+
+      it { should be_able_to :vote_up, create(:answer, user_id: second_user.id) }
+      it { should_not be_able_to :vote_up, create(:answer, user_id: user.id) }
+
+      it { should be_able_to :vote_down, create(:answer, user_id: second_user.id) }
+      it { should_not be_able_to :vote_down, create(:answer, user_id: user.id) }
+
+      it { should be_able_to :make_best, create(:answer, user_id: second_user.id) }
+      it { should_not be_able_to :make_best, create(:answer, user_id: user.id) }
+    end
   end
 end
