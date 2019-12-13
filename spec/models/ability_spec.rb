@@ -15,9 +15,8 @@ RSpec.describe Ability do
     let(:second_user) { create(:user) }
 
     describe 'questions' do
-      it { should_not be_able_to :manage, :all }
-
       it { should be_able_to :create, Question }
+      it { should be_able_to :read, Question }
 
       it { should be_able_to :update, create(:question, user_id: user.id) }
       it { should_not be_able_to :update, create(:question, user_id: second_user.id) }
@@ -33,8 +32,6 @@ RSpec.describe Ability do
     end
 
     describe 'answers' do
-      it { should_not be_able_to :manage, :all }
-
       it { should be_able_to :create, Answer }
 
       it { should be_able_to :update, create(:answer, user_id: user.id) }
