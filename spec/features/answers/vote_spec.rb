@@ -79,7 +79,7 @@ feature 'User can give vote to answer', "
       end
     end
 
-    scenario 'Author question cannot vote' do
+    scenario 'Author answer cannot vote' do
       sign_in user
       visit question_path(question)
 

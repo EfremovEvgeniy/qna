@@ -1,6 +1,6 @@
 .questions
   = render @questions
 
-- if current_user.present?
+- if can? :create, Question
   p= link_to 'Ask question', new_question_path
 
