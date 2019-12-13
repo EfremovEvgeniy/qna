@@ -28,6 +28,8 @@ gem 'jbuilder', '~> 2.7'
 # gem for push data from controllers to js files
 gem 'gon'
 
+gem 'cancancan'
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
 # Gem for slim templates
