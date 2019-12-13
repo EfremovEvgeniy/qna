@@ -49,5 +49,9 @@ RSpec.describe Ability do
       it { should be_able_to :make_best, create(:answer, user_id: second_user.id) }
       it { should_not be_able_to :make_best, create(:answer, user_id: user.id) }
     end
+
+    describe 'comments' do
+      it { should be_able_to :create, Comment }
+    end
   end
 end
