@@ -29,6 +29,8 @@ class Ability
     can :make_best, Question, user_id: user.id
 
     can :create, Comment
+
+    can :read, Trophy
   end
 
   def guest_abilities

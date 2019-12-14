@@ -53,5 +53,9 @@ RSpec.describe Ability do
     describe 'comments' do
       it { should be_able_to :create, Comment }
     end
+
+    describe 'trophies' do
+      it { should be_able_to :read, Trophy }
+    end
   end
 end
