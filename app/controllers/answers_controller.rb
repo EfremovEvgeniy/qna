@@ -23,13 +23,13 @@ class AnswersController < ApplicationController
 
   def update
     authorize! :update, answer
-    answer.update(answer_params)
+    @answer.update(answer_params)
     @question = @answer.question
   end
 
   def make_best
     authorize! :make_best, answer
-    authorize! :make_best, answer.question
+    authorize! :make_best, @answer.question
     @answer.make_best!
   end
 

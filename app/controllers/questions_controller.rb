@@ -19,7 +19,7 @@ class QuestionsController < ApplicationController
 
   def new
     question.links.build
-    question.build_trophy
+    @question.build_trophy
   end
 
   def edit; end
@@ -36,12 +36,12 @@ class QuestionsController < ApplicationController
 
   def update
     authorize! :update, question
-    question.update(question_params)
+    @question.update(question_params)
   end
 
   def destroy
     authorize! :destroy, question
-    question.destroy
+    @question.destroy
     redirect_to questions_path, notice: 'The question is successfully deleted.'
   end
 
