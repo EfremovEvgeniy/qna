@@ -199,9 +199,9 @@ RSpec.describe QuestionsController, type: :controller do
         end .to_not change(Question, :count)
       end
 
-      it 'redirects to index view' do
+      it 'redirects to root_path' do
         delete :destroy, params: { id: random_question }
-        expect(response).to redirect_to questions_path
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -303,10 +303,10 @@ RSpec.describe QuestionsController, type: :controller do
         end.to_not change(question.reload, :title)
       end
 
-      it 'renders template update' do
+      it 'redirects to root_path' do
         patch :update, params:
         { id: question, question: { body: 'new body', title: 'new title' } }, format: :js
-        expect(response).to render_template :update
+        expect(response).to redirect_to root_path
       end
     end
 
