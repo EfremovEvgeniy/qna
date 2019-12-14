@@ -27,7 +27,7 @@ class Ability
     end
 
     can :destroy, ActiveStorage::Attachment do |att|
-      user.author_of?(att)
+      user.author_of?(att.record)
     end
 
     can :destroy, Link do |link|
@@ -35,11 +35,7 @@ class Ability
     end
 
     can :make_best, Answer do |answer|
-      !user.author_of?(answer)
-    end
-
-    can :make_best, Question do |question|
-      user.author_of?(question)
+      !user.author_of?(answer) && user.author_of?(answer.question)
     end
   end
 

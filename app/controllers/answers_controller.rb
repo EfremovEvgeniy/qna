@@ -29,7 +29,6 @@ class AnswersController < ApplicationController
 
   def make_best
     authorize! :make_best, answer
-    authorize! :make_best, @answer.question
     @answer.make_best!
   end
 

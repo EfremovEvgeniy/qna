@@ -35,9 +35,8 @@ p
         span#best_answer
           'You marked this answer like best!'
 
-    - if can? :make_best, answer.question
-      - if can? :make_best, answer
-        - if !answer.best?
-           = link_to  'Best answer', make_best_answer_path(answer), method: :patch, remote: true
+    - if can? :make_best, answer
+      - if !answer.best?
+         = link_to  'Best answer', make_best_answer_path(answer), method: :patch, remote: true
 
 
