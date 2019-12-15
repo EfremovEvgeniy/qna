@@ -8,6 +8,7 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   let(:user) { create(:user) }
+  let(:second_user) { create(:user) }
   let!(:question) { create(:question, user: user) }
   let!(:trophy) { create(:trophy, question: question) }
   let!(:answer) { create(:answer, question: question, user: user) }
@@ -167,9 +168,9 @@ RSpec.describe AnswersController, type: :controller do
         end .to_not change(Answer, :count)
       end
 
-      it 'renders template destroy' do
+      it 'redirects to root path' do
         delete :destroy, params: { id: random_answer, question_id: question }, format: :js
-        expect(response).to render_template :destroy
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -274,14 +275,15 @@ RSpec.describe AnswersController, type: :controller do
         end .to_not change(answer.reload, :body)
       end
 
-      it 'renders template update' do
+      it 'redirects to root_path' do
         patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
-        expect(response).to render_template :update
+        expect(response).to redirect_to root_path
       end
     end
   end
 
   describe 'PATCH #make_best' do
+    let!(:answer) { create(:answer, question: question, user: second_user) }
     context 'only the by author question' do
       before { login_with(user) }
 
@@ -319,11 +321,11 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer).to_not be_best
       end
 
-      it 'renders make best temolate' do
+      it 'redirects to root path' do
         patch :make_best, params: { id: answer, answer: { best: true } }, format: :js
         answer.reload
 
-        expect(response).to render_template :make_best
+        expect(response).to redirect_to root_path
       end
     end
 

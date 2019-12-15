@@ -5,6 +5,8 @@ class QuestionsController < ApplicationController
   helper_method :question
   after_action :publish_question, only: :create
 
+  authorize_resource
+
   def index
     @questions = Question.all
   end
@@ -17,7 +19,7 @@ class QuestionsController < ApplicationController
 
   def new
     question.links.build
-    question.build_trophy
+    @question.build_trophy
   end
 
   def edit; end
@@ -33,11 +35,13 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    question.update(question_params) if current_user.author_of?(question)
+    authorize! :update, question
+    @question.update(question_params)
   end
 
   def destroy
-    question.destroy if current_user.author_of?(question)
+    authorize! :destroy, question
+    @question.destroy
     redirect_to questions_path, notice: 'The question is successfully deleted.'
   end
 

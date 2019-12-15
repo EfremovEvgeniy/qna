@@ -7,7 +7,7 @@ div class = "#{commentable.class.name.downcase}-#{commentable.id}-comment-errors
     = f.text_area :body
   p
     = f.submit 'create comment'
-- if current_user.present?
+- if can? :create, Comment
   p = link_to  "Add comment to that #{commentable.class.name.downcase}", '#', class: 'create-comment-link', data: { commentable_id: commentable.id, commentable_type: commentable.class.name.downcase}
 
   

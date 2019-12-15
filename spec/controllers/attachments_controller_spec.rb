@@ -41,14 +41,14 @@ RSpec.describe AttachmentsController, type: :controller do
         )
       end
 
-      it 'renders destroy template' do
+      it 'redirects to root path' do
         expect do
           delete :destroy, params:
          { id: second_question.files[0] }, format: :js
         end .not_to change(
           second_question.files, :count
         )
-        expect(response).to render_template :destroy
+        expect(response).to redirect_to root_path
       end
     end
 
