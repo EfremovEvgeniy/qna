@@ -18,11 +18,11 @@ RSpec.describe Ability do
       it { should be_able_to :create, Question }
       it { should be_able_to :read, Question }
 
-      it { should be_able_to %i[update destroy], create(:question, user: user) }
-      it { should_not be_able_to %i[update destroy], create(:question, user: second_user) }
+      it { should be_able_to %i[update destroy], build(:question, user: user) }
+      it { should_not be_able_to %i[update destroy], build(:question, user: second_user) }
 
-      it { should be_able_to %i[vote_up vote_down], create(:question, user: second_user) }
-      it { should_not be_able_to %i[vote_up vote_down], create(:question, user: user) }
+      it { should be_able_to %i[vote_up vote_down], build(:question, user: second_user) }
+      it { should_not be_able_to %i[vote_up vote_down], build(:question, user: user) }
     end
 
     describe 'answers' do
@@ -31,16 +31,16 @@ RSpec.describe Ability do
 
       it { should be_able_to :create, Answer }
 
-      it { should be_able_to %i[update destroy], create(:answer, user: user) }
-      it { should_not be_able_to %i[destroy destroy], create(:answer, user: second_user) }
+      it { should be_able_to %i[update destroy], build(:answer, user: user) }
+      it { should_not be_able_to %i[destroy destroy], build(:answer, user: second_user) }
 
-      it { should be_able_to %i[vote_up vote_down], create(:answer, user: second_user) }
-      it { should_not be_able_to %i[vote_up vote_down], create(:answer, user: user) }
+      it { should be_able_to %i[vote_up vote_down], build(:answer, user: second_user) }
+      it { should_not be_able_to %i[vote_up vote_down], build(:answer, user: user) }
 
-      it { should be_able_to :make_best, create(:answer, question: question,  user: second_user) }
-      it { should_not be_able_to :make_best, create(:answer, question: question, user: user) }
-      it { should_not be_able_to :make_best, create(:answer, question: second_question, user: user) }
-      it { should_not be_able_to :make_best, create(:answer, question: second_question, user: second_user) }
+      it { should be_able_to :make_best, build(:answer, question: question,  user: second_user) }
+      it { should_not be_able_to :make_best, build(:answer, question: question, user: user) }
+      it { should_not be_able_to :make_best, build(:answer, question: second_question, user: user) }
+      it { should_not be_able_to :make_best, build(:answer, question: second_question, user: second_user) }
     end
 
     describe 'comments' do
@@ -52,10 +52,10 @@ RSpec.describe Ability do
     end
 
     describe 'links' do
-      let(:question) { create(:question, user: user) }
-      let(:second_question) { create(:question) }
-      it { should be_able_to :destroy, create(:link, linkable: question) }
-      it { should_not be_able_to :destroy, create(:link, linkable: second_question) }
+      let(:question) { build(:question, user: user) }
+      let(:second_question) { build(:question) }
+      it { should be_able_to :destroy, build(:link, linkable: question) }
+      it { should_not be_able_to :destroy, build(:link, linkable: second_question) }
     end
 
     describe 'attachments' do
