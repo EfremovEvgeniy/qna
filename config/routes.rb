@@ -23,6 +23,14 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :api do
+    namespace :v1 do
+      resources :profiles, only: [] do
+        get :me, on: :collection
+      end
+    end
+  end
+
   resources :attachments, only: :destroy
   namespace :user do
     resources :trophies, only: :index
