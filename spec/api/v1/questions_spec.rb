@@ -24,7 +24,7 @@ describe 'Questions API', type: :request do
       let(:access_token) { create(:access_token) }
       let!(:questions) { create_list(:question, 2) }
       let(:question) { questions.first }
-      let(:question_response) { json.first }
+      let(:question_response) { json['questions'].first }
       let!(:answers) { create_list(:answer, 3, question: question) }
 
       before { get '/api/v1/questions', params: { access_token: access_token.token }, headers: headers }
@@ -34,13 +34,17 @@ describe 'Questions API', type: :request do
       end
 
       it 'returns array of questions' do
-        expect(json.size).to eq 2
+        expect(json['questions'].size).to eq 2
       end
 
       it 'returns all public fields' do
-        %w[title body user_id created_at updated_at].each do |attr|
+        %w[title body created_at updated_at].each do |attr|
           expect(question_response[attr]).to eq question.send(attr).as_json
         end
+      end
+
+      it 'contains user object' do
+        expect(question_response['user']['id']).to eq question.user.id
       end
 
       describe 'aswers' do
