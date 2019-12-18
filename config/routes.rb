@@ -30,6 +30,7 @@ Rails.application.routes.draw do
       end
       resources :questions, only: %i[index show] do
         get :answers, on: :member
+        resources :answers, shallow: :true, only: :show
       end
     end
   end
