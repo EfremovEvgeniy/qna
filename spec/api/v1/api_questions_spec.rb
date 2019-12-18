@@ -153,4 +153,64 @@ describe 'Questions API', type: :request do
       # end
     end
   end
+
+  describe 'POST /api/v1/questions' do
+    let(:api_path) { '/api/v1/questions' }
+
+    context 'unauthorized' do
+      it 'returns 401 status if there is no access_token' do
+        post api_path, params: { action: :create, format: :json, question: attributes_for(:question) }
+        expect(response.status).to eq 401
+      end
+
+      it 'returns 401 status if access_token is invalid' do
+        post api_path, params: { action: :create, access_token: '1234', format: :json, question: attributes_for(:question) }
+        expect(response.status).to eq 401
+      end
+    end
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token) }
+      before { get api_path, params: { access_token: access_token.token }, headers: headers }
+
+      it 'returns 200 status' do
+        expect(response).to be_successful
+      end
+
+      context 'with valid atrributes' do
+        it 'creates question' do
+          expect do
+            post api_path, params: { action: :create, format: :json, access_token: access_token.token,
+                                     question: attributes_for(:question) }
+          end .to change(Question, :count).by(1)
+        end
+        it 'creates question with link' do
+          expect do
+            post api_path, params: { action: :create, format: :json, access_token: access_token.token,
+                                     question: {
+                                       title: 'MyTitle', body: 'MyBody',
+                                       links_attributes: { '0' => { name: 'LinkName',
+                                                                    url: 'https://www.linkexample.com/',
+                                                                    _destroy: false } }
+                                     } }
+          end .to change(Question, :count).by(1)
+        end
+      end
+
+      context 'with invalid attributes' do
+        it 'does not create question' do
+          expect do
+            post api_path, params: { action: :create, format: :json, access_token: access_token.token,
+                                     question: attributes_for(:question, :invalid) }
+          end .to_not change(Question, :count)
+        end
+
+        it 'returns error status' do
+          post api_path, params: { action: :create, format: :json, access_token: access_token.token,
+                                   question: attributes_for(:question, :invalid) }
+          expect(response.status).to eq 422
+        end
+      end
+    end
+  end
 end
