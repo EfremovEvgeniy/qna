@@ -220,6 +220,7 @@ describe 'Questions API', type: :request do
     let(:api_path) { "/api/v1/questions/#{question.id}" }
 
     context 'unauthorized' do
+      let(:access_token) { create(:access_token) }
       it 'returns 401 status if there is no access_token' do
         patch api_path, params: { action: :update, format: :json, question: attributes_for(:question) }
         expect(response.status).to eq 401
@@ -230,10 +231,16 @@ describe 'Questions API', type: :request do
                                   question: attributes_for(:question) }
         expect(response.status).to eq 401
       end
+
+      it 'returns 401 status if user not author' do
+        patch api_path, params: { action: :update, access_token: access_token, format: :json,
+                                  question: attributes_for(:question) }
+        expect(response.status).to eq 401
+      end
     end
 
     context 'authorized' do
-      let(:access_token) { create(:access_token) }
+      let(:access_token) { create(:access_token, resource_owner_id: question.user.id) }
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
       it 'returns 200 status' do
@@ -278,6 +285,7 @@ describe 'Questions API', type: :request do
     let(:api_path) { "/api/v1/questions/#{question.id}" }
 
     context 'unauthorized' do
+      let(:access_token) { create(:access_token) }
       it 'returns 401 status if there is no access_token' do
         delete api_path, params: { action: :destroy, format: :json, question: attributes_for(:question) }
         expect(response.status).to eq 401
@@ -288,10 +296,16 @@ describe 'Questions API', type: :request do
                                    question: attributes_for(:question) }
         expect(response.status).to eq 401
       end
+
+      it 'returns 401 status if user not author' do
+        patch api_path, params: { action: :update, access_token: access_token, format: :json,
+                                  question: attributes_for(:question) }
+        expect(response.status).to eq 401
+      end
     end
 
     context 'authorized' do
-      let(:access_token) { create(:access_token) }
+      let(:access_token) { create(:access_token, resource_owner_id: question.user.id) }
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
       it 'returns 200 status' do

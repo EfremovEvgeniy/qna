@@ -1,5 +1,5 @@
 class Api::V1::QuestionsController < Api::V1::BaseController
-  skip_authorization_check
+  authorize_resource
 
   before_action :find_question, only: %i[answers show update destroy]
 

@@ -37,9 +37,17 @@ class Ability
     can :make_best, Answer do |answer|
       !user.author_of?(answer) && user.author_of?(answer.question)
     end
+
+    can :me, User, id: user.id
+
+    can :answers, Question
+
+    can :index, User
   end
 
   def guest_abilities
     can :read, Question
+
+    can :answers, Question
   end
 end
