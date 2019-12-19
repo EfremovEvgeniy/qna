@@ -22,12 +22,11 @@ describe 'Questions API', type: :request do
 
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
+      it_behaves_like 'Successful response'
 
-      it 'returns array of questions' do
-        expect(json['questions'].size).to eq 2
+      it_behaves_like 'Returns list of objects' do
+        let(:given_response) { json['questions'] }
+        let(:count) { 2 }
       end
 
       it 'returns all public fields' do
@@ -44,8 +43,9 @@ describe 'Questions API', type: :request do
         let(:answer) { answers.first }
         let(:answer_response) { question_response['answers'].first }
 
-        it 'returns array of answers' do
-          expect(question_response['answers'].size).to eq 3
+        it_behaves_like 'Returns list of objects' do
+          let(:given_response) { question_response['answers'] }
+          let(:count) { 3 }
         end
 
         it 'returns all public fields' do
@@ -73,12 +73,11 @@ describe 'Questions API', type: :request do
 
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
+      it_behaves_like 'Successful response'
 
-      it 'returns array of answers' do
-        expect(json['answers'].size).to eq 3
+      it_behaves_like 'Returns list of objects' do
+        let(:given_response) { json['answers'] }
+        let(:count) { 3 }
       end
 
       it 'returns all public fields' do
@@ -105,9 +104,7 @@ describe 'Questions API', type: :request do
 
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
+      it_behaves_like 'Successful response'
 
       it 'returns all public fields' do
         %w[id title body user_id created_at updated_at].each do |attr|
@@ -117,8 +114,10 @@ describe 'Questions API', type: :request do
 
       describe 'links' do
         let(:links_response) { json['question']['links'] }
-        it 'returns array of links' do
-          expect(links_response.size).to eq question.links.size
+
+        it_behaves_like 'Returns list of objects' do
+          let(:given_response) { links_response }
+          let(:count) { question.links.size }
         end
 
         it 'returns all public fields' do
@@ -130,9 +129,12 @@ describe 'Questions API', type: :request do
 
       describe 'comments' do
         let(:comments_response) { json['question']['comments'] }
-        it 'returns array of comments' do
-          expect(comments_response.size).to eq question.comments.size
+
+        it_behaves_like 'Returns list of objects' do
+          let(:given_response) { comments_response }
+          let(:count) { question.comments.size }
         end
+
         it 'returns all public fields' do
           %w[id body user_id created_at updated_at].each do |attr|
             expect(comments_response.first[attr]).to eq comment.send(attr).as_json
@@ -142,10 +144,11 @@ describe 'Questions API', type: :request do
 
       # describe 'files' do
       #   let(:attachments_response) { json['question']['files'] }
-      #   it 'returns array of attachments' do
-      #     expect(question.files.size).to eq 1
-      #     expect(attachments_response.size).to eq question.files.size
-      #   end
+
+      # it_behaves_like 'Returns list of objects' do
+      #   let(:given_response) { attachments_response }
+      #   let(:count) { question.files.size }
+      # end
 
       #   it 'return link to file' do
       #     expect(response.body).to include_json(question.files.first.filename.to_s.to_json)
@@ -174,9 +177,7 @@ describe 'Questions API', type: :request do
       let(:access_token) { create(:access_token) }
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
+      it_behaves_like 'Successful response'
 
       context 'creates with valid atrributes' do
         it 'creates question' do
@@ -243,9 +244,7 @@ describe 'Questions API', type: :request do
       let(:access_token) { create(:access_token, resource_owner_id: question.user.id) }
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
+      it_behaves_like 'Successful response'
 
       context 'with valid atrributes' do
         let!(:link) { create(:link, linkable: question) }
@@ -308,15 +307,9 @@ describe 'Questions API', type: :request do
       let(:access_token) { create(:access_token, resource_owner_id: question.user.id) }
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
-      end
-
-      it 'deletes question' do
-        expect do
-          delete api_path, params: { action: :destroy, format: :json, access_token: access_token.token,
-                                     question: question.id }
-        end.to change(Question, :count).by(-1)
+      it_behaves_like 'Successful response'
+      it_behaves_like 'Deletable object' do
+        let(:object) { question }
       end
     end
   end

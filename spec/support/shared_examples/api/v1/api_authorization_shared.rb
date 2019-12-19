@@ -12,3 +12,15 @@ shared_examples_for 'API Authorizable' do
     end
   end
 end
+
+shared_examples_for 'Successful response' do
+  it 'returns 200 status' do
+    expect(response).to be_successful
+  end
+end
+
+shared_examples_for 'Returns list of objects' do
+  it 'returns list of objects' do
+    expect(given_response.size).to eq count
+  end
+end
