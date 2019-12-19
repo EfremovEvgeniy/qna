@@ -14,7 +14,7 @@ class Ability
   end
 
   def user_abilities
-    can :read, [Question, Trophy]
+    can :read, [Question, Trophy, Answer]
 
     can :create, [Question, Answer, Comment]
 
@@ -46,8 +46,7 @@ class Ability
   end
 
   def guest_abilities
-    can :read, Question
-
+    can :read, [Question, Answer]
     can :answers, Question
   end
 end

@@ -24,3 +24,26 @@ shared_examples_for 'Returns list of objects' do
     expect(given_response.size).to eq count
   end
 end
+
+shared_examples_for 'API Authorizable with attributes' do
+  context 'unauthorized with object attributes' do
+    let(:access_token) { create(:access_token) }
+    it 'returns 401 status if there is no access_token' do
+      do_request(method, api_path, params: { action: :destroy, format: :json, factory: attributes_for(factory) })
+
+      expect(response.status).to eq 401
+    end
+
+    it 'returns 401 status if access_token is invalid' do
+      do_request(method, api_path, params: { action: :destroy, access_token: '1234', format: :json,
+                                             factory: attributes_for(factory) })
+      expect(response.status).to eq 401
+    end
+
+    it 'returns 401 status if user not author' do
+      do_request(method, api_path, params: { action: :destroy, access_token: access_token, format: :json,
+                                             factory: attributes_for(factory) })
+      expect(response.status).to eq 401
+    end
+  end
+end

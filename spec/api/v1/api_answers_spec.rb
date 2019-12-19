@@ -78,19 +78,9 @@ describe 'Answers API', type: :request do
     let(:question) { create(:question) }
     let(:api_path) { "/api/v1/questions/#{question.id}/answers" }
 
-    context 'unauthorized' do
-      it 'returns 401 status if there is no access_token' do
-        post api_path, params: { question_id: question.id, action: :create, format: :json,
-                                 answer: attributes_for(:answer) }
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if access_token is invalid' do
-        post api_path, params: { question_id: question.id, action: :create,
-                                 access_token: '1234', format: :json,
-                                 answer: attributes_for(:answer) }
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'API Authorizable with attributes' do
+      let(:method) { :post }
+      let(:factory) { :answer }
     end
 
     context 'authorized' do
@@ -144,24 +134,9 @@ describe 'Answers API', type: :request do
     let!(:answer) { create(:answer) }
     let(:api_path) { "/api/v1/answers/#{answer.id}" }
 
-    context 'unauthorized' do
-      let(:access_token) { create(:access_token) }
-      it 'returns 401 status if there is no access_token' do
-        patch api_path, params: { action: :update, format: :json, answer: attributes_for(:answer) }
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if access_token is invalid' do
-        patch api_path, params: { action: :update, access_token: '1234', format: :json,
-                                  answer: attributes_for(:answer) }
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if user not author' do
-        patch api_path, params: { action: :update, access_token: access_token, format: :json,
-                                  answer: attributes_for(:answer) }
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'API Authorizable with attributes' do
+      let(:method) { :patch }
+      let(:factory) { :answer }
     end
 
     context 'authorized' do
@@ -175,14 +150,14 @@ describe 'Answers API', type: :request do
         let!(:link) { create(:link, linkable: answer) }
 
         it 'updates answer' do
-          patch api_path, params: { id: answer.id, action: :update, format: :json, access_token: access_token.token,
+          patch api_path, params: { action: :update, format: :json, access_token: access_token.token,
                                     answer: { body: 'new body' } }
           expect(answer.reload.body).to eq 'new body'
         end
 
         it 'deletes link from answer' do
           patch api_path, params: { action: :update, format: :json, access_token: access_token.token,
-                                    id: answer.id, answer: {
+                                    answer: {
                                       body: 'MyBody',
                                       links_attributes: { '0' => { name: link.name,
                                                                    url: link.url,
@@ -207,24 +182,9 @@ describe 'Answers API', type: :request do
     let!(:answer) { create(:answer) }
     let(:api_path) { "/api/v1/answers/#{answer.id}" }
 
-    context 'unauthorized' do
-      let(:access_token) { create(:access_token) }
-      it 'returns 401 status if there is no access_token' do
-        delete api_path, params: { action: :destroy, format: :json, answer: attributes_for(:answer) }
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if access_token is invalid' do
-        delete api_path, params: { action: :destroy, access_token: '1234', format: :json,
-                                   answer: attributes_for(:answer) }
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if user not author' do
-        patch api_path, params: { action: :update, access_token: access_token, format: :json,
-                                  answer: attributes_for(:answer) }
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'API Authorizable with attributes' do
+      let(:method) { :delete }
+      let(:factory) { :answer }
     end
 
     context 'authorized' do

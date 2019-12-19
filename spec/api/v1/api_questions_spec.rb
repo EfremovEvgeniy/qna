@@ -160,17 +160,9 @@ describe 'Questions API', type: :request do
   describe 'POST /api/v1/questions' do
     let(:api_path) { '/api/v1/questions' }
 
-    context 'unauthorized' do
-      it 'returns 401 status if there is no access_token' do
-        post api_path, params: { action: :create, format: :json, question: attributes_for(:question) }
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if access_token is invalid' do
-        post api_path, params: { action: :create, access_token: '1234', format: :json,
-                                 question: attributes_for(:question) }
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'API Authorizable with attributes' do
+      let(:method) { :post }
+      let(:factory) { :question }
     end
 
     context 'authorized' do
@@ -220,24 +212,9 @@ describe 'Questions API', type: :request do
     let!(:question) { create(:question) }
     let(:api_path) { "/api/v1/questions/#{question.id}" }
 
-    context 'unauthorized' do
-      let(:access_token) { create(:access_token) }
-      it 'returns 401 status if there is no access_token' do
-        patch api_path, params: { action: :update, format: :json, question: attributes_for(:question) }
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if access_token is invalid' do
-        patch api_path, params: { action: :update, access_token: '1234', format: :json,
-                                  question: attributes_for(:question) }
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if user not author' do
-        patch api_path, params: { action: :update, access_token: access_token, format: :json,
-                                  question: attributes_for(:question) }
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'API Authorizable with attributes' do
+      let(:method) { :patch }
+      let(:factory) { :question }
     end
 
     context 'authorized' do
@@ -283,24 +260,9 @@ describe 'Questions API', type: :request do
     let!(:question) { create(:question) }
     let(:api_path) { "/api/v1/questions/#{question.id}" }
 
-    context 'unauthorized' do
-      let(:access_token) { create(:access_token) }
-      it 'returns 401 status if there is no access_token' do
-        delete api_path, params: { action: :destroy, format: :json, question: attributes_for(:question) }
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if access_token is invalid' do
-        delete api_path, params: { action: :destroy, access_token: '1234', format: :json,
-                                   question: attributes_for(:question) }
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if user not author' do
-        patch api_path, params: { action: :update, access_token: access_token, format: :json,
-                                  question: attributes_for(:question) }
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'API Authorizable with attributes' do
+      let(:method) { :delete }
+      let(:factory) { :question }
     end
 
     context 'authorized' do
