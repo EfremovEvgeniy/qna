@@ -1,7 +1,7 @@
 class Api::V1::QuestionsController < Api::V1::BaseController
   skip_authorization_check
 
-  before_action :find_question, only: %i[answers show]
+  before_action :find_question, only: %i[answers show update destroy]
 
   def index
     questions = Question.all
@@ -24,6 +24,14 @@ class Api::V1::QuestionsController < Api::V1::BaseController
     else
       render_errors(question)
     end
+  end
+
+  def update
+    @question.update(question_params)
+  end
+
+  def destroy
+    @question.destroy
   end
 
   private

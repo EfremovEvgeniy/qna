@@ -164,7 +164,8 @@ describe 'Questions API', type: :request do
       end
 
       it 'returns 401 status if access_token is invalid' do
-        post api_path, params: { action: :create, access_token: '1234', format: :json, question: attributes_for(:question) }
+        post api_path, params: { action: :create, access_token: '1234', format: :json,
+                                 question: attributes_for(:question) }
         expect(response.status).to eq 401
       end
     end
@@ -177,7 +178,7 @@ describe 'Questions API', type: :request do
         expect(response).to be_successful
       end
 
-      context 'with valid atrributes' do
+      context 'creates with valid atrributes' do
         it 'creates question' do
           expect do
             post api_path, params: { action: :create, format: :json, access_token: access_token.token,
@@ -210,6 +211,98 @@ describe 'Questions API', type: :request do
                                    question: attributes_for(:question, :invalid) }
           expect(response.status).to eq 422
         end
+      end
+    end
+  end
+
+  describe 'PATCH /api/v1/questions/:id' do
+    let!(:question) { create(:question) }
+    let(:api_path) { "/api/v1/questions/#{question.id}" }
+
+    context 'unauthorized' do
+      it 'returns 401 status if there is no access_token' do
+        patch api_path, params: { action: :update, format: :json, question: attributes_for(:question) }
+        expect(response.status).to eq 401
+      end
+
+      it 'returns 401 status if access_token is invalid' do
+        patch api_path, params: { action: :update, access_token: '1234', format: :json,
+                                  question: attributes_for(:question) }
+        expect(response.status).to eq 401
+      end
+    end
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token) }
+      before { get api_path, params: { access_token: access_token.token }, headers: headers }
+
+      it 'returns 200 status' do
+        expect(response).to be_successful
+      end
+
+      context 'with valid atrributes' do
+        let!(:link) { create(:link, linkable: question) }
+
+        it 'updates question' do
+          patch api_path, params: { action: :update, format: :json, access_token: access_token.token,
+                                    question: { body: 'new body', title: 'new title' } }
+          expect(question.reload.body).to eq 'new body'
+          expect(question.title).to eq 'new title'
+        end
+
+        it 'deletes link from question' do
+          patch api_path, params: { action: :update, format: :json, access_token: access_token.token,
+                                    question: {
+                                      title: 'MyTitle', body: 'MyBody',
+                                      links_attributes: { '0' => { name: link.name,
+                                                                   url: link.url,
+                                                                   _destroy: '1', id: link.id } }
+                                    } }
+          expect(question.reload.links.count).to be_zero
+        end
+      end
+
+      context 'with invalid attributes' do
+        it 'does not update question attributes' do
+          expect do
+            patch api_path, params: { action: :update, format: :json, access_token: access_token.token,
+                                      question: attributes_for(:question, :invalid) }
+          end .to_not change(question.reload, :title)
+        end
+      end
+    end
+  end
+
+  describe 'DELETE /api/v1/questions/:id' do
+    let!(:question) { create(:question) }
+    let(:api_path) { "/api/v1/questions/#{question.id}" }
+
+    context 'unauthorized' do
+      it 'returns 401 status if there is no access_token' do
+        delete api_path, params: { action: :destroy, format: :json, question: attributes_for(:question) }
+        expect(response.status).to eq 401
+      end
+
+      it 'returns 401 status if access_token is invalid' do
+        delete api_path, params: { action: :destroy, access_token: '1234', format: :json,
+                                   question: attributes_for(:question) }
+        expect(response.status).to eq 401
+      end
+    end
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token) }
+      before { get api_path, params: { access_token: access_token.token }, headers: headers }
+
+      it 'returns 200 status' do
+        expect(response).to be_successful
+      end
+
+      it 'deletes question' do
+        expect do
+          delete api_path, params: { action: :destroy, format: :json, access_token: access_token.token,
+                                     question: question.id }
+        end.to change(Question, :count).by(-1)
       end
     end
   end
