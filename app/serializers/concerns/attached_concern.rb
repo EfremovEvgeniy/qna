@@ -9,11 +9,17 @@ module AttachedConcern
   end
 
   def links
-    object.links.map { |l| { id: l.id, name: l.name, url: l.url, created_at: l.created_at, updated_at: l.updated_at } }
+    object.links.map do |l|
+      { id: l.id, name: l.name, url: l.url,
+        created_at: l.created_at, updated_at: l.updated_at }
+    end
   end
 
   def comments
-    object.comments.map { |c| { id: c.id, body: c.body, user_id: c.user_id, created_at: c.created_at, updated_at: c.updated_at } }
+    object.comments.map do |c|
+      { id: c.id, body: c.body, user_id: c.user_id,
+        created_at: c.created_at, updated_at: c.updated_at }
+    end
   end
 
   def files
