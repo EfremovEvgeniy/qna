@@ -1,7 +1,7 @@
 class Api::V1::AnswersController < Api::V1::BaseController
   skip_authorization_check
 
-  before_action :find_answer, only: :show
+  before_action :find_answer, only: %i[show update]
   before_action :find_question, only: :create
 
   def show
@@ -16,6 +16,10 @@ class Api::V1::AnswersController < Api::V1::BaseController
     else
       render_errors(answer)
     end
+  end
+
+  def update
+    @answer.update(answer_params)
   end
 
   private
