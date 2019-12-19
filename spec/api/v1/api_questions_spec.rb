@@ -142,18 +142,18 @@ describe 'Questions API', type: :request do
         end
       end
 
-      # describe 'files' do
-      #   let(:attachments_response) { json['question']['files'] }
+      describe 'files' do
+        let(:attachments_response) { json['question']['files'] }
 
-      # it_behaves_like 'Returns list of objects' do
-      #   let(:given_response) { attachments_response }
-      #   let(:count) { question.files.size }
-      # end
+        it_behaves_like 'Returns list of objects' do
+          let(:given_response) { attachments_response }
+          let(:count) { question.files.size }
+        end
 
-      #   it 'return link to file' do
-      #     expect(response.body).to include_json(question.files.first.filename.to_s.to_json)
-      #   end
-      # end
+        it 'return link to file' do
+          expect(response.body).to include_json(question.files.first.filename.to_s.to_json)
+        end
+      end
     end
   end
 
@@ -171,38 +171,25 @@ describe 'Questions API', type: :request do
 
       it_behaves_like 'Successful response'
 
-      context 'creates with valid atrributes' do
-        it 'creates question' do
-          expect do
-            post api_path, params: { action: :create, format: :json, access_token: access_token.token,
-                                     question: attributes_for(:question) }
-          end .to change(Question, :count).by(1)
+      it_behaves_like 'Creatable object' do
+        let(:object) { create(:question) }
+        let(:method) { :post }
+        let(:valid_attributes) do
+          { params: { action: :create, format: :json, access_token: access_token.token,
+                      question: attributes_for(:question) } }
         end
-        it 'creates question with link' do
-          expect do
-            post api_path, params: { action: :create, format: :json, access_token: access_token.token,
-                                     question: {
-                                       title: 'MyTitle', body: 'MyBody',
-                                       links_attributes: { '0' => { name: 'LinkName',
-                                                                    url: 'https://www.linkexample.com/',
-                                                                    _destroy: false } }
-                                     } }
-          end .to change(Question, :count).by(1)
+        let(:valid_attributes_with_link) do
+          { params: { action: :create, format: :json, access_token: access_token.token,
+                      question: {
+                        title: 'MyTitle', body: 'MyBody',
+                        links_attributes: { '0' => { name: 'LinkName',
+                                                     url: 'https://www.linkexample.com/',
+                                                     _destroy: false } }
+                      } } }
         end
-      end
-
-      context 'with invalid attributes' do
-        it 'does not create question' do
-          expect do
-            post api_path, params: { action: :create, format: :json, access_token: access_token.token,
-                                     question: attributes_for(:question, :invalid) }
-          end .to_not change(Question, :count)
-        end
-
-        it 'returns error status' do
-          post api_path, params: { action: :create, format: :json, access_token: access_token.token,
-                                   question: attributes_for(:question, :invalid) }
-          expect(response.status).to eq 422
+        let(:invalid_attributes) do
+          { params: { action: :create, format: :json, access_token: access_token.token,
+                      question: attributes_for(:question, :invalid) } }
         end
       end
     end
@@ -219,38 +206,30 @@ describe 'Questions API', type: :request do
 
     context 'authorized' do
       let(:access_token) { create(:access_token, resource_owner_id: question.user.id) }
+      let(:link) { create(:link, linkable: question) }
       before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
       it_behaves_like 'Successful response'
 
-      context 'with valid atrributes' do
-        let!(:link) { create(:link, linkable: question) }
-
-        it 'updates question' do
-          patch api_path, params: { action: :update, format: :json, access_token: access_token.token,
-                                    question: { body: 'new body', title: 'new title' } }
-          expect(question.reload.body).to eq 'new body'
-          expect(question.title).to eq 'new title'
+      it_behaves_like 'Updatable object' do
+        let(:method) { :patch }
+        let(:object) { question }
+        let(:valid_attributes) do
+          { params: { action: :update, format: :json, access_token: access_token.token,
+                      question: { body: 'new body', title: 'new title' } } }
         end
-
-        it 'deletes link from question' do
-          patch api_path, params: { action: :update, format: :json, access_token: access_token.token,
-                                    question: {
-                                      title: 'MyTitle', body: 'MyBody',
-                                      links_attributes: { '0' => { name: link.name,
-                                                                   url: link.url,
-                                                                   _destroy: '1', id: link.id } }
-                                    } }
-          expect(question.reload.links.count).to be_zero
+        let(:valid_attributes_with_link) do
+          { params: { action: :update, format: :json, access_token: access_token.token,
+                      question: {
+                        title: 'MyTitle', body: 'MyBody',
+                        links_attributes: { '0' => { name: link.name,
+                                                     url: link.url,
+                                                     _destroy: '1', id: link.id } }
+                      } } }
         end
-      end
-
-      context 'with invalid attributes' do
-        it 'does not update question attributes' do
-          expect do
-            patch api_path, params: { action: :update, format: :json, access_token: access_token.token,
-                                      question: attributes_for(:question, :invalid) }
-          end .to_not change(question.reload, :title)
+        let(:invalid_attributes) do
+          { params: { action: :update, format: :json, access_token: access_token.token,
+                      question: attributes_for(:question, :invalid) } }
         end
       end
     end

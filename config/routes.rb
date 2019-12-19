@@ -28,9 +28,9 @@ Rails.application.routes.draw do
       resources :profiles, only: :index do
         get :me, on: :collection
       end
-      resources :questions, only: %i[index show create update destroy] do
+      resources :questions, except: %i[new edit] do
         get :answers, on: :member
-        resources :answers, shallow: true, only: %i[show create update destroy]
+        resources :answers, shallow: true, except: %i[new edit index]
       end
     end
   end
