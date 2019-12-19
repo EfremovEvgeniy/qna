@@ -203,4 +203,45 @@ describe 'Answers API', type: :request do
       end
     end
   end
+
+  describe 'DELETE /api/v1/answers/:id' do
+    let!(:answer) { create(:answer) }
+    let(:api_path) { "/api/v1/answers/#{answer.id}" }
+
+    context 'unauthorized' do
+      let(:access_token) { create(:access_token) }
+      it 'returns 401 status if there is no access_token' do
+        delete api_path, params: { action: :destroy, format: :json, answer: attributes_for(:answer) }
+        expect(response.status).to eq 401
+      end
+
+      it 'returns 401 status if access_token is invalid' do
+        delete api_path, params: { action: :destroy, access_token: '1234', format: :json,
+                                   answer: attributes_for(:answer) }
+        expect(response.status).to eq 401
+      end
+
+      it 'returns 401 status if user not author' do
+        patch api_path, params: { action: :update, access_token: access_token, format: :json,
+                                  answer: attributes_for(:answer) }
+        expect(response.status).to eq 401
+      end
+    end
+
+    context 'authorized' do
+      let(:access_token) { create(:access_token, resource_owner_id: answer.user.id) }
+      before { get api_path, params: { access_token: access_token.token }, headers: headers }
+
+      it 'returns 200 status' do
+        expect(response).to be_successful
+      end
+
+      it 'deletes answer' do
+        expect do
+          delete api_path, params: { action: :destroy, format: :json, access_token: access_token.token,
+                                     answer: answer.id }
+        end.to change(Answer, :count).by(-1)
+      end
+    end
+  end
 end
