@@ -29,7 +29,8 @@ shared_examples_for 'API Authorizable with attributes' do
   context 'unauthorized with object attributes' do
     let(:access_token) { create(:access_token) }
     it 'returns 401 status if there is no access_token' do
-      do_request(method, api_path, params: { action: :destroy, format: :json, factory: attributes_for(factory) })
+      do_request(method, api_path, params: { action: :destroy, format: :json,
+                                             factory: attributes_for(factory) })
 
       expect(response.status).to eq 401
     end

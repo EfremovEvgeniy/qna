@@ -22,12 +22,16 @@ class Api::V1::QuestionsController < Api::V1::BaseController
     if question.save
       render json: question, status: :created
     else
-      render_errors(question)
+      render json: { errors: question.errors }, status: :unprocessable_entity
     end
   end
 
   def update
-    @question.update(question_params)
+    if @question.update(question_params)
+      head :ok
+    else
+      head :unprocessable_entity
+    end
   end
 
   def destroy
@@ -43,9 +47,5 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   def question_params
     params.require(:question).permit(:title, :body, files: [],
                                                     links_attributes: %i[id name url _destroy])
-  end
-
-  def render_errors(question)
-    render json: { errors: question.errors }, status: :unprocessable_entity
   end
 end
