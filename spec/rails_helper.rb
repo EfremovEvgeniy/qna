@@ -43,6 +43,8 @@ RSpec.configure do |config|
   config.include ControllerMacros, type: :controller
   config.include FeatureHelpers, type: :feature
   config.include OmniauthMacros
+  config.include ApiHelper, type: :request
+  config.include JsonSpec::Helpers
 
   Capybara.javascript_driver = :selenium_chrome_headless
 

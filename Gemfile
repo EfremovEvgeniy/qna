@@ -30,6 +30,14 @@ gem 'gon'
 
 gem 'cancancan'
 
+gem 'doorkeeper'
+
+gem 'active_model_serializers', '~> 0.10.0'
+
+gem 'oj'
+
+gem 'json_spec'
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
 # Gem for slim templates

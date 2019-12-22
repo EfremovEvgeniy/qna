@@ -14,7 +14,7 @@ class Ability
   end
 
   def user_abilities
-    can :read, [Question, Trophy]
+    can :read, [Question, Trophy, Answer]
 
     can :create, [Question, Answer, Comment]
 
@@ -37,9 +37,16 @@ class Ability
     can :make_best, Answer do |answer|
       !user.author_of?(answer) && user.author_of?(answer.question)
     end
+
+    can :me, User, id: user.id
+
+    can :answers, Question
+
+    can :index, User
   end
 
   def guest_abilities
-    can :read, Question
+    can :read, [Question, Answer]
+    can :answers, Question
   end
 end

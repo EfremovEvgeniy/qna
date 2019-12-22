@@ -6,8 +6,9 @@ RSpec.describe Ability do
   describe 'for guest' do
     let(:user) { nil }
 
-    it { should be_able_to :read, Question }
+    it { should be_able_to :read, Question, Answer }
     it { should_not be_able_to :manage, :all }
+    it { should be_able_to :answers, Question }
   end
 
   describe 'for user' do
@@ -29,6 +30,8 @@ RSpec.describe Ability do
       let(:question) { create(:question, user: user) }
       let(:second_question) { create(:question, user: second_user) }
 
+      it { should be_able_to :read, Answer }
+
       it { should be_able_to :create, Answer }
 
       it { should be_able_to %i[update destroy], build(:answer, user: user) }
@@ -41,6 +44,8 @@ RSpec.describe Ability do
       it { should_not be_able_to :make_best, build(:answer, question: question, user: user) }
       it { should_not be_able_to :make_best, build(:answer, question: second_question, user: user) }
       it { should_not be_able_to :make_best, build(:answer, question: second_question, user: second_user) }
+
+      it { should be_able_to :answers, Question }
     end
 
     describe 'comments' do
@@ -60,6 +65,10 @@ RSpec.describe Ability do
 
     describe 'attachments' do
       it { should be_able_to :destroy, ActiveStorage::Attachment }
+    end
+
+    describe 'users' do
+      it { should be_able_to :me, User }
     end
   end
 end
