@@ -1,4 +1,10 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  authenticate :user, lambda { |u| u.email == 'johne32rus23@gmail.com' } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   use_doorkeeper
   root to: 'questions#index'
 
