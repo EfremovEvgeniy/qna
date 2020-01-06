@@ -1,0 +1,8 @@
+- if @questions
+    p 
+     b Hi, list of new question for the day
+    - @questions.each do |question|
+        p = link_to question.title, question
+- else
+  p 
+    b Hi, not new questions for the day
