@@ -32,4 +32,12 @@ class User < ApplicationRecord
   def author_of?(resource)
     id == resource.user_id
   end
+
+  def find_subscriber
+    Subscriber.find_by(user_id: id)
+  end
+
+  def subscribe?(question)
+    subscribers.where(question_id: question.id).exists?
+  end
 end

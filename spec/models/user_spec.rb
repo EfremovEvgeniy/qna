@@ -69,4 +69,22 @@ RSpec.describe User, type: :model do
       expect(second_user).to_not be_author_of(question)
     end
   end
+
+  describe '#find_subscriber' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+
+    it 'find subscriber for user' do
+      expect(user.find_subscriber).to eq user.subscribers.first
+    end
+  end
+
+  describe '#subscribe?' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+
+    it 'find subscriber for user' do
+      expect(user.subscribe?(question)).to be true
+    end
+  end
 end
