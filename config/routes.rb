@@ -45,4 +45,6 @@ Rails.application.routes.draw do
   namespace :user do
     resources :trophies, only: :index
   end
+
+  resources :subscribers, only: %i[create destroy]
 end

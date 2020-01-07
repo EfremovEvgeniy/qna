@@ -14,6 +14,7 @@ RSpec.describe Question, type: :model do
   it { should have_one(:trophy).dependent(:destroy) }
   it { should have_many(:votes).dependent(:destroy) }
   it { should have_many(:comments).dependent(:destroy) }
+  it { should have_many(:subscribers).dependent(:destroy) }
   it { should belong_to(:user) }
 
   it { should validate_presence_of :title }
