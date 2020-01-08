@@ -12,11 +12,17 @@ class Answer < ApplicationRecord
 
   default_scope { order(best: :desc).order(:created_at) }
 
+  after_create :send_email
+
   def make_best!
     transaction do
       question.answers.update_all(best: false)
       update!(best: true)
       question.trophy&.update!(user: user)
     end
+  end
+
+  def send_email
+    NotifyNewAnswerJob.perform_later(self)
   end
 end
