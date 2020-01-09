@@ -1,0 +1,5 @@
+<% if @subscriber.errors.present? %>
+    $('.subscribers').html('<%= render 'shared/errors', resource: @subscriber %>')
+<% else %>
+    $('.subscribers').html("<%= j render 'subscribers/subscriber', question: @subscriber.question %>");
+<% end %>

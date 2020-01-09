@@ -1,4 +1,10 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  authenticate :user, ->(u) { u.email == ENV['ADMIN_EMAIL'] } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   use_doorkeeper
   root to: 'questions#index'
 
@@ -39,4 +45,6 @@ Rails.application.routes.draw do
   namespace :user do
     resources :trophies, only: :index
   end
+
+  resources :subscribers, only: %i[create destroy]
 end

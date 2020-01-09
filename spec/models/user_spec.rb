@@ -6,6 +6,7 @@ RSpec.describe User, type: :model do
   it { should have_many(:trophies).dependent(:destroy) }
   it { should have_many(:votes).dependent(:destroy) }
   it { should have_many(:authorizations).dependent(:destroy) }
+  it { should have_many(:subscribers).dependent(:destroy) }
 
   it { should validate_presence_of :email }
   it { should validate_presence_of :password }
@@ -66,6 +67,24 @@ RSpec.describe User, type: :model do
 
     it 'should deny that second_user is an author of the passed resource' do
       expect(second_user).to_not be_author_of(question)
+    end
+  end
+
+  describe '#find_subscriber' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+
+    it 'find subscriber for user' do
+      expect(user.find_subscriber).to eq user.subscribers.first
+    end
+  end
+
+  describe '#subscribe?' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+
+    it 'find subscriber for user' do
+      expect(user.subscribe?(question)).to be true
     end
   end
 end

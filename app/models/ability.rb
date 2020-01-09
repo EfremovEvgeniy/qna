@@ -16,7 +16,9 @@ class Ability
   def user_abilities
     can :read, [Question, Trophy, Answer]
 
-    can :create, [Question, Answer, Comment]
+    can :create, [Question, Answer, Comment, Subscriber]
+
+    can :destroy, Subscriber, id: user.id
 
     can %i[update destroy], [Question, Answer] do |resource|
       user.author_of?(resource)
