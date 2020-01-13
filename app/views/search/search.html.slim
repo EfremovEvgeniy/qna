@@ -1,0 +1,8 @@
+b
+  | results search by query:
+  |  
+em
+  = params[:search_string]
+- @results&.each do |result|
+  p = helper_view_result(result)
+
