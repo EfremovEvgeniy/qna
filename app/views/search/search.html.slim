@@ -1,8 +1,8 @@
 .search_results
   h3 Search results:
   - if @search_results.empty?
-    span.result Your search for nothing was found.
+    span.result Nothing was found.
   - @search_results.each do |result|
     p.result
       = helper_view_result(result)
-
+      
