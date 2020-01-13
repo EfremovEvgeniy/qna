@@ -13,11 +13,5 @@ RSpec.describe SearchController, type: :controller do
         get :search, params: { search_string: 'test', search_scope: "#{scope}s" }
       end
     end
-
-    it 'render search view' do
-      get :search, params: { search_string: 'test', search_scope: 'All' }
-
-      expect(response).to render_template :search
-    end
   end
 end
