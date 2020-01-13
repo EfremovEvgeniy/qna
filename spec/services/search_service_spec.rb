@@ -1,17 +1,22 @@
 require 'rails_helper'
 
-RSpec.describe SearchService do
+RSpec.describe 'SearchService class' do
   describe '.call' do
-    describe 'search in scopes' do
-      context 'questions scope' do
-        let!(:question) { create(:question, title: 'test') }
-        let(:search_string) { 'test' }
-        let(:search_scope) { 'Questions' }
-        subject { SearchService.new(search_string, search_scope) }
+    let(:search_string) { 'test' }
 
-        it 'returns exist question' do
-          expect(subject.call).to eq question
+    describe 'search in scopes' do
+      %w[Questions Answers Comments Users].each do |search_scope|
+        it "calls search in #{search_scope}" do
+          expect(search_scope.singularize.classify.constantize).to receive(:search).with(search_string)
+          SearchService.call(search_string, search_scope)
         end
+      end
+    end
+
+    describe 'search in all' do
+      it 'calls search in all with value smth' do
+        expect(ThinkingSphinx).to receive(:search).with(search_string)
+        SearchService.call(search_string, 'smth')
       end
     end
   end
