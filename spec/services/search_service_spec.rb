@@ -5,7 +5,7 @@ RSpec.describe 'SearchService class' do
     let(:search_string) { 'test' }
 
     describe 'search in scopes' do
-      %w[Questions Answers Comments Users].each do |search_scope|
+      SearchService::SEARCH_SCOPES.each do |search_scope|
         it "calls search in #{search_scope}" do
           expect(search_scope.singularize.classify.constantize).to receive(:search).with(search_string)
           SearchService.call(search_string, search_scope)

@@ -1,6 +1,5 @@
-= form_tag search_path, method: :get do
-  = text_field_tag 'search_string', params[:search_string], type: :search
-  label
-    | select: 
-    = select_tag :search_rank, options_for_select(%w(All Users Questions Answers Comments))
-  = submit_tag 'Search'
+.search
+  = form_tag search_path, method: :get do
+    = text_field_tag 'search_string', params[:search_string], type: :search
+    = select_tag :search_scope, options_for_select(%w(All Users Questions Answers Comments))
+    = submit_tag 'Search'
