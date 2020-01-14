@@ -6,7 +6,7 @@ feature 'User can search', js: true, sphinx: true do
   given!(:answer) { create(:answer, body: 'test') }
   given!(:comment) { create(:comment, user: user, commentable: question, body: 'test') }
 
-  SearchService::SEARCH_SCOPES.each do |search_scope|
+  SearchService::SCOPES.each do |search_scope|
     scenario "search in #{search_scope}" do
       ThinkingSphinx::Test.run do
         visit questions_path

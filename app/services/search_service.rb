@@ -1,13 +1,11 @@
 class SearchService
-  SEARCH_SCOPES = %w[Questions Answers Comments Users].freeze
+  SCOPES = %w[Questions Answers Comments Users].freeze
 
-  def self.call(search_string, search_scope)
-    escape_string = ThinkingSphinx::Query.escape(search_string)
+  def self.call(query, scope = nil)
+    klass = ThinkingSphinx
+    klass = scope.singularize.classify.constantize if SCOPES.include?(scope)
 
-    if SEARCH_SCOPES.include?(search_scope)
-      search_scope.singularize.classify.constantize.search escape_string
-    else
-      ThinkingSphinx.search escape_string
-    end
+    escaped_query = ThinkingSphinx::Query.escape(query)
+    klass.search escaped_query
   end
 end
