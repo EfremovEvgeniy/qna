@@ -4,5 +4,5 @@
     span.result Nothing was found.
   - @search_results.each do |result|
     p.result
-      = helper_view_result(result)
+      = render partial: "search/#{result.class.name.downcase}", locals: { result: result }
       
