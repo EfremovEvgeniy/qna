@@ -1,6 +1,6 @@
-require 'sphinx_helper'
+require 'rails_helper'
 
-feature 'User can search', js: true, sphinx: true do
+feature 'User can search', js: true do
   given!(:user) { create(:user, email: 'test@gmail.com') }
   given!(:question) { create(:question, body: 'test') }
   given!(:answer) { create(:answer, body: 'test') }
