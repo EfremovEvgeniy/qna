@@ -59,19 +59,6 @@ describe 'Answers API', type: :request do
           end
         end
       end
-
-      describe 'files' do
-        let(:attachments_response) { json['answer']['files'] }
-
-        it_behaves_like 'Returns list of objects' do
-          let(:given_response) { attachments_response }
-          let(:count) { answer.files.size }
-        end
-
-        it 'return link to file' do
-          expect(response.body).to include_json(answer.files.first.filename.to_s.to_json)
-        end
-      end
     end
   end
 

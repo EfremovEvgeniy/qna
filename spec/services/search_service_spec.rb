@@ -24,6 +24,7 @@ RSpec.describe 'SearchService class' do
       let!(:question) { create(:question, title: 'my_query') }
       let!(:answer) { create(:answer, body: 'my_query') }
       let!(:user) { create(:user, email: 'my_query@gmail.com') }
+      let!(:comment) { create(:comment, commentable: question, body: 'my_query') }
       let!(:second_question) { create(:question, title: 'something_else') }
       let!(:second_answer) { create(:answer, body: 'something_else') }
       let!(:second_user) { create(:user, email: 'something_else@gmail.com') }
@@ -35,9 +36,21 @@ RSpec.describe 'SearchService class' do
         end
       end
 
+      it 'returns searched answer and does not return else' do
+        ThinkingSphinx::Test.run do
+          expect((SearchService.call(query, 'Answers'))).to match_array [answer]
+        end
+      end
+
+      it 'returns searched user and does not return else' do
+        ThinkingSphinx::Test.run do
+          expect((SearchService.call(query, 'Users'))).to match_array [user]
+        end
+      end
+
       it 'returns searched objects and does not return else' do
         ThinkingSphinx::Test.run do
-          expect((SearchService.call(query, 'smth'))).to match_array [question, answer, user]
+          expect((SearchService.call(query, 'smth'))).to match_array [question, answer, user, comment]
         end
       end
     end
