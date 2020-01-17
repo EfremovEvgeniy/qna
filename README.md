@@ -1,24 +1,14 @@
-# README
+# QnA
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Приложение позволяет задавать и отвечать на вопросы(аналог https://stackoverflow.com/)
 
-Things you may want to cover:
+* Ruby version 2.6.3
 
-* Ruby version
+* Rails version 6.0
 
-* System dependencies
+* Database Postgresql
 
-* Configuration
+* Rspec 4.0.0.beta2
 
-* Database creation
+* Services (Sidekiq, Sphinx, Devise)
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
