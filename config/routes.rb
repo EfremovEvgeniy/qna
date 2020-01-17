@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
+  get '/search', to: 'search#search'
+
   use_doorkeeper
   root to: 'questions#index'
 

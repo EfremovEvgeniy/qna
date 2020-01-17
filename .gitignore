@@ -45,3 +45,6 @@ yarn-debug.log*
 /master.key.new
 
 dump.rdb
+
+config/*.sphinx.conf
+db/sphinx

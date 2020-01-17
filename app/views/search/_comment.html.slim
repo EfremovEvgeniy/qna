@@ -1,0 +1,8 @@
+b Comment: 
+i= result.body
+- if result.commentable_type.downcase == 'question'
+  = link_to result.body, question_path(result.commentable), target: '_blank'
+- else
+  = link_to result.body, question_path(result.commentable.question), target: '_blank'
+
+

@@ -1,0 +1,5 @@
+.search
+  = form_tag search_path, method: :get do
+    = text_field_tag 'search_string', params[:search_string], type: :search
+    = select_tag :search_scope, options_for_select(SearchService::SCOPES), {include_blank: 'All'}
+    = submit_tag 'Search'
