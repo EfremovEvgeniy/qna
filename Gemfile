@@ -76,6 +76,11 @@ group :development, :test do
   gem 'action-cable-testing'
 
   gem 'letter_opener', '~> 1.7'
+  gem 'capistrano', require: false
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano-rvm', require: false
+  gem 'capistrano-passenger', require: false
 end
 
 group :development do
