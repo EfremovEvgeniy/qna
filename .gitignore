@@ -22,8 +22,8 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
-# /config/credentials.yml.enc
-config/new.cred.yml
+/master.key.new
+/config/new.cred.yml
 
 /public/packs
 /public/packs-test
@@ -40,9 +40,6 @@ yarn-debug.log*
 /spec/fixtures
 
 .env
-
-
-/master.key.new
 
 dump.rdb
 

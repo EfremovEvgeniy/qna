@@ -59,7 +59,8 @@ gem 'aws-sdk', '~> 3.0', '>= 3.0.1'
 # gem for polymorphic associations
 gem 'cocoon'
 
-gem 'sidekiq'
+gem 'sidekiq', '<6'
+gem 'rack', '2.0.7'
 gem 'sinatra', require: false
 gem 'whenever', require: false
 gem 'mysql2', '0.4.9'
@@ -82,6 +83,7 @@ group :development, :test do
   gem 'capistrano-bundler', require: false
   gem 'capistrano-rvm', require: false
   gem 'capistrano-passenger', require: false
+  gem 'capistrano-sidekiq', require: false
 end
 
 group :development do
