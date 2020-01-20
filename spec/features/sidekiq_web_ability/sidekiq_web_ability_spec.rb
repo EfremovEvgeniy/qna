@@ -2,7 +2,7 @@ require 'rails_helper'
 
 feature 'User with admin email can see sidekiq web' do
   given(:user) { create(:user) }
-  given(:admin) { create(:user, email: ENV['ADMIN_EMAIL']) }
+  given(:admin) { create(:user, email: Rails.application.credentials[Rails.env.to_sym][:admin_email][:email]) }
 
   describe 'Authenticated user' do
     scenario 'with admin email' do

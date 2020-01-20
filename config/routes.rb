@@ -1,7 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  authenticate :user, ->(u) { u.email == ENV['ADMIN_EMAIL'] } do
+  authenticate :user, ->(u) { u.email == Rails.application.credentials[Rails.env.to_sym][:admin_email][:email] } do
     mount Sidekiq::Web => '/sidekiq'
   end
 
