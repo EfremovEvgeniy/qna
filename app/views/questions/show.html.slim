@@ -1,26 +1,27 @@
-.subscribers
-  = render 'subscribers/subscriber', question: question
-  
-div id = "question_#{question.id}"
-  p = question.title
-  p = question.body
-  div id = "comments_question_#{question.id}"
-    = render question.comments
-    = render 'comments/form', commentable: question
+- cache [question, current_user]
+  .subscribers
+    = render 'subscribers/subscriber', question: question
+    
+  div id = "question_#{question.id}"
+    p = question.title
+    p = question.body
+    div id = "comments_question_#{question.id}"
+      = render question.comments
+      = render 'comments/form', commentable: question
 
-.files
-  = render 'shared/attached_files', resource: question
+  .files
+    = render 'shared/attached_files', resource: question
 
-.trophies
-  - if question.trophy&.persisted?
-    p 
-      = render question.trophy
+  .trophies
+    - if question.trophy&.persisted?
+      p 
+        = render question.trophy
 
-.links
-  = render 'shared/attached_links', resource: question
+  .links
+    = render 'shared/attached_links', resource: question
 
-.answers
-  = render question.answers
+  .answers
+    = render question.answers
 
 - if can? :create, Answer
   .answer_errors

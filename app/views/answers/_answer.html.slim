@@ -1,42 +1,43 @@
-p
-  div id = "answer_#{answer.id}" class="answer"
-    p= answer.body
-    div id = "comments_answer_#{answer.id}"
-      = render answer.comments
-      = render 'comments/form', commentable: answer
-    - if can? :vote_up, answer
-      = render 'shared/vote', resource: answer
-    = render 'shared/attached_files', resource: answer
+- cache [answer, current_user]
+  p
+    div id = "answer_#{answer.id}" class="answer"
+      p= answer.body
+      div id = "comments_answer_#{answer.id}"
+        = render answer.comments
+        = render 'comments/form', commentable: answer
+      - if can? :vote_up, answer
+        = render 'shared/vote', resource: answer
+      = render 'shared/attached_files', resource: answer
 
-    .links
-      = render 'shared/attached_links', resource: answer
-          
-    - if can? :update, answer
-        |    
-        = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-        |    
-        = link_to 'Delete', answer_path(answer), id: "delete-answer_#{answer.id}", remote: true, method: :delete
-        = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
-          p
-            = f.label :body, 'Edit body'
-            = f.text_area :body
-          p
-            = f.label :files
-            = f.file_field :files, multiple: true, direct_upload: true
-          .links
-            = f.fields_for :links do |link|
-              = render 'link_fields', f: link
+      .links
+        = render 'shared/attached_links', resource: answer
+            
+      - if can? :update, answer
+          |    
+          = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+          |    
+          = link_to 'Delete', answer_path(answer), id: "delete-answer_#{answer.id}", remote: true, method: :delete
+          = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
+            p
+              = f.label :body, 'Edit body'
+              = f.text_area :body
+            p
+              = f.label :files
+              = f.file_field :files, multiple: true, direct_upload: true
             .links
-              = link_to_add_association 'add more', f, :links
+              = f.fields_for :links do |link|
+                = render 'link_fields', f: link
+              .links
+                = link_to_add_association 'add more', f, :links
 
-          = f.submit 'Save'
+            = f.submit 'Save'
 
-    - if answer.best?
-        span#best_answer
-          'You marked this answer like best!'
+      - if answer.best?
+          span#best_answer
+            'You marked this answer like best!'
 
-    - if can? :make_best, answer
-      - if !answer.best?
-         = link_to  'Best answer', make_best_answer_path(answer), method: :patch, remote: true
+      - if can? :make_best, answer
+        - if !answer.best?
+           = link_to  'Best answer', make_best_answer_path(answer), method: :patch, remote: true
 
 
