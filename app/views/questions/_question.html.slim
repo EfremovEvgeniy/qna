@@ -1,18 +1,19 @@
-p
-  div id = "question_#{question.id}"  
-    p= question.title
-    p= question.body
-    - if can? :vote_up, question
-      = render 'shared/vote', resource: question
-    = link_to 'show',  question_path(question)
-    - if can? :update, question
-        |    
-        = link_to 'edit', '#', class: 'edit-question-link', data: { question_id: question.id }
-        |  
-        = link_to 'delete', question_path(question), method: :delete
+- cache [question, current_user]
+  p
+    div id = "question_#{question.id}"  
+      p= question.title
+      p= question.body
+      - if can? :vote_up, question
+        = render 'shared/vote', resource: question
+      = link_to 'show',  question_path(question)
+      - if can? :update, question
+          |    
+          = link_to 'edit', '#', class: 'edit-question-link', data: { question_id: question.id }
+          |  
+          = link_to 'delete', question_path(question), method: :delete
 
-    div id = "question-errors_#{question.id}"
-      = render 'shared/errors', resource: question    
+      div id = "question-errors_#{question.id}"
+        = render 'shared/errors', resource: question    
 
     = form_with model: question, class: 'hidden', html: { id: "edit-question-#{question.id}" } do |f|
       p
