@@ -64,7 +64,7 @@ gem 'aws-sdk', '~> 3.0', '>= 3.0.1'
 gem 'cocoon'
 
 gem 'sidekiq', '<6'
-gem 'rack', '2.0.7'
+gem 'rack', '2.1.4'
 gem 'sinatra', require: false
 gem 'whenever', require: false
 gem 'mysql2', '0.4.9'
