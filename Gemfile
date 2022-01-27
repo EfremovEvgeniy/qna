@@ -63,7 +63,7 @@ gem 'aws-sdk', '~> 3.0', '>= 3.0.1'
 # gem for polymorphic associations
 gem 'cocoon'
 
-gem 'sidekiq', '<6'
+gem 'sidekiq', '<7'
 gem 'rack', '2.0.7'
 gem 'sinatra', require: false
 gem 'whenever', require: false
