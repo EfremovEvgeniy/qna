@@ -4,13 +4,13 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.6.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.0'
+gem 'rails', '~> 6.0.6'
 # Use postgresql as the database for Active Record
 gem 'pg', '>= 0.18', '< 2.0'
 # Use Puma as the app server
 gem 'puma', '~> 3.12'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5'
+gem 'sass-rails', '~> 6'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem 'webpacker', '~> 4.0'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
@@ -63,8 +63,8 @@ gem 'aws-sdk', '~> 3.0', '>= 3.0.1'
 # gem for polymorphic associations
 gem 'cocoon'
 
-gem 'sidekiq', '<6'
-gem 'rack', '2.0.7'
+gem 'sidekiq', '<7'
+gem 'rack', '2.2.4'
 gem 'sinatra', require: false
 gem 'whenever', require: false
 gem 'mysql2', '0.4.9'
